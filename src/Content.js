@@ -6,7 +6,7 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import { variables } from "./Variable";
 
 const Content = () => {
-  const fetchUserData = () => {
+  const fetchHSData = () => {
     fetch(variables.API_URL)
       .then((response) => {
         return response.json();
@@ -16,7 +16,7 @@ const Content = () => {
       });
   };
   useEffect(() => {
-    fetchUserData();
+    fetchHSData();
   }, []);
   const [hsData, setHsData] = useState([
     {
