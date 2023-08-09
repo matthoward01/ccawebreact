@@ -4,63 +4,52 @@ import { Dropdown, Table, DropdownButton, ButtonGroup } from "react-bootstrap";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import { variables } from "./Variable";
+import paginationFactory from "react-bootstrap-table2-paginator";
 
-const Content = () => {
-  const fetchHSData = () => {
-    fetch(variables.API_URL)
+const Content = ({search}) => {
+  const [data, setData] = useState([]);  
+  const [value, setValue] = useState("all");
+  const [type, setType] = useState("Hard Surface");
+  
+  useEffect(() => {
+    if (type==="Hard Surface")
+    {
+    fetch(variables.API_CCA)
       .then((response) => {
+        //console.log("resp", response);
         return response.json();
       })
-      .then((data) => {
-        setHsData(data);
+      .then((dbData) => {
+        //console.log("result", data);
+        setData(dbData);
+
       });
-  };
-  useEffect(() => {
-    fetchHSData();
-  }, []);
-  const [hsData, setHsData] = useState([
+    }
+    else
     {
-      id: 1,
-      plate: "123456",
-      style: "ThisStyle",
-      template: "HS18x24BL",
-      status: "Approved",
-    },
-    {
-      id: 2,
-      plate: "654321",
-      style: "ThatStyle",
-      template: "HS18x24BL",
-      status: "Rejected",
-    },
-  ]);
-  const [ssData, setSsData] = useState([
-    {
-      id: 1,
-      plate: "987654",
-      style: "ThisStyleSS",
-      template: "HS18x24BL",
-      status: "Approved",
-    },
-    {
-      id: 2,
-      plate: "456789",
-      style: "ThatStyleSS",
-      template: "HS18x24BL",
-      status: "Rejected",
-    },
-  ]);
-  const [value, setValue] = useState("all");
-  const [typeData, setTypeData] = useState(hsData);
-  const [type, setType] = useState("Hard Surface");
+      fetch(variables.API_CCASS)
+      .then((response) => {
+        //console.log("resp", response);
+        return response.json();
+      })
+      .then((dbData) => {
+        //console.log("result", data);
+        setData(dbData);
+
+      });
+    }
+  },[type]);
+
   const handleTypeChange = (type) => {
-    type === "Hard Surface" ? setTypeData(hsData) : setTypeData(ssData);
     type === "Hard Surface" ? setType(type) : setType(type);
   };
   const handleChange = (val) => {
     setValue(val);
   };
 
+  if (!data.length) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <main>
       <div>
@@ -88,36 +77,38 @@ const Content = () => {
             variant="outline-secondary"
             value="Approved"
           >
-            Approvals Only
+            Approval
           </ToggleButton>
           <ToggleButton
             id="tbg-btn-3"
             variant="outline-secondary"
-            value="Approved-Pending"
+            value="Waiting for Approval"
           >
-            Approvals Pending Only
+            Waiting for Approval
           </ToggleButton>
           <ToggleButton
             id="tbg-btn-4"
             variant="outline-secondary"
             value="Questions"
           >
-            Questions Only
+            Question
           </ToggleButton>
           <ToggleButton
             id="tbg-btn-5"
             variant="outline-secondary"
             value="Rejected"
           >
-            Rejection Only
+            Rejection
           </ToggleButton>
         </ToggleButtonGroup>
       </div>
 
-      <Table striped bordered hover>
+      <Table 
+      striped bordered hover
+      pagination={paginationFactory({ sizePerPage: 50 })}>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Sample ID</th>
             <th>Plate</th>
             <th>Style</th>
             <th>Template</th>
@@ -125,13 +116,38 @@ const Content = () => {
           </tr>
         </thead>
         <tbody>
-          {typeData.map((data) => (
-            <tr key={data.id}>
-              <td>{data.id}</td>
-              <td>{data.plate}</td>
-              <td>{data.style}</td>
-              <td>{data.template}</td>
-              <td>{data.status}</td>
+          {data.filter(statusFilter => ((
+            (value !== "all") ? statusFilter.Status.toString().toLowerCase() === value.toLowerCase() : statusFilter
+          ))).filter(filteredData => ((
+            filteredData.Sample_ID.toString().toLowerCase() + " " +
+            filteredData.Back_Label_Plate.toString().toLowerCase() + " " +
+            filteredData.Sample_Name.toString().toLowerCase() + " " +
+            filteredData.Art_Type_BL.toString().toLowerCase() + " " +
+            filteredData.Status.toString().toLowerCase()
+            )).includes(search.toLowerCase())).map((data) => (
+            <tr key={data.Sample_ID}>
+              <td>{data.Sample_ID}</td>
+              <td>{data.Back_Label_Plate}</td>
+              <td>{data.Sample_Name}</td>
+              <td>{data.Art_Type_BL}</td>
+              <td>{data.Status}</td>              
+            </tr>
+          ))}
+          {data.filter(statusFilter => ((
+            (value !== "all") ? statusFilter.Status_FL.toString().toLowerCase() === value.toLowerCase() : statusFilter
+          ))).filter(filteredData => ((
+            filteredData.Sample_ID.toString().toLowerCase() + " " +
+            filteredData.Face_Label_Plate.toString().toLowerCase() + " " +
+            filteredData.Sample_Name.toString().toLowerCase() + " " +
+            filteredData.Art_Type_FL.toString().toLowerCase() + " " +
+            filteredData.Status_FL.toString().toLowerCase()
+            )).includes(search.toLowerCase())).map((data) => (
+            <tr key={data.Sample_ID}>
+              <td>{data.Sample_ID}</td>
+              <td>{data.Face_Label_Plate}</td>
+              <td>{data.Sample_Name}</td>
+              <td>{data.Art_Type_FL}</td>
+              <td>{data.Status_FL}</td>              
             </tr>
           ))}
         </tbody>

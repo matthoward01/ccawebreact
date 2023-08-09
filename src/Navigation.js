@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
-const Navigation = () => {
+const Navigation = ({search, setSearch}) => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
@@ -22,8 +22,9 @@ const Navigation = () => {
               placeholder="Search"
               className="me-2"
               aria-label="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
-            <Button variant="outline-success">Search</Button>
           </Form>
         </Navbar.Collapse>
       </Container>
