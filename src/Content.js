@@ -4,7 +4,6 @@ import { Dropdown, Table, DropdownButton, ButtonGroup } from "react-bootstrap";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import { variables } from "./Variable";
-import paginationFactory from "react-bootstrap-table2-paginator";
 
 const Content = ({search}) => {
   const [data, setData] = useState([]);  
@@ -104,8 +103,7 @@ const Content = ({search}) => {
       </div>
 
       <Table 
-      striped bordered hover
-      pagination={paginationFactory({ sizePerPage: 50 })}>
+      striped bordered hover>
         <thead>
           <tr>
             <th>Sample ID</th>
