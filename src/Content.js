@@ -1,49 +1,84 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Dropdown, Table, DropdownButton, ButtonGroup } from "react-bootstrap";
+import {
+  Dropdown,
+  Table,
+  DropdownButton,
+  ButtonGroup,
+  Modal,
+  Button,
+} from "react-bootstrap";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import { variables } from "./Variable";
+import JobInfoHS from "./JobInfoHS";
+import JobInfoSS from "./JobInfoSS";
 
-const Content = ({search}) => {
-  const [data, setData] = useState([]);  
+const Content = ({ search }) => {
+  const [data, setData] = useState([]);
   const [value, setValue] = useState("all");
   const [type, setType] = useState("Hard Surface");
-  
+  //const [jobData, setJobData] = useState([]);
+  const [isJobModalVisible, setIsJobModalVisible] = useState(false);
+  const [jobId, setJobId] = useState("");
+
   useEffect(() => {
-    if (type==="Hard Surface")
-    {
-    fetch(variables.API_CCA)
-      .then((response) => {
-        //console.log("resp", response);
-        return response.json();
-      })
-      .then((dbData) => {
-        //console.log("result", data);
-        setData(dbData);
-
-      });
-    }
-    else
-    {
+    if (type === "Hard Surface") {
+      fetch(variables.API_CCA)
+        .then((response) => {
+          //console.log("resp", response);
+          return response.json();
+        })
+        .then((dbData) => {
+          //console.log("result", data);
+          setData(dbData);
+        });
+    } else {
       fetch(variables.API_CCASS)
-      .then((response) => {
-        //console.log("resp", response);
-        return response.json();
-      })
-      .then((dbData) => {
-        //console.log("result", data);
-        setData(dbData);
-
-      });
+        .then((response) => {
+          //console.log("resp", response);
+          return response.json();
+        })
+        .then((dbData) => {
+          //console.log("result", data);
+          setData(dbData);
+        });
     }
-  },[type]);
+  }, [type]);
 
   const handleTypeChange = (type) => {
     type === "Hard Surface" ? setType(type) : setType(type);
   };
   const handleChange = (val) => {
     setValue(val);
+  };
+
+  const statusColoring = (currentStatus) => {
+    var color = "";
+
+    if (currentStatus === "Approved") {
+      color = "table-success";
+    }
+    if (currentStatus === "Waiting for Approval") {
+      color = "table-warning";
+    }
+    if (currentStatus === "Rejected") {
+      color = "table-danger";
+    }
+    if (currentStatus === "Questions") {
+      color = "table-info";
+    }
+    return color;
+  };
+
+  const showJobModal = (id) => {
+    console.log("Passed ID:" + id);
+    setJobId(id);
+    setIsJobModalVisible(true);
+  };
+
+  const handleJobModalCancel = () => {
+    setIsJobModalVisible(false);
   };
 
   if (!data.length) {
@@ -102,8 +137,7 @@ const Content = ({search}) => {
         </ToggleButtonGroup>
       </div>
 
-      <Table 
-      striped bordered hover>
+      <Table bordered hover>
         <thead>
           <tr>
             <th>Sample ID</th>
@@ -114,42 +148,113 @@ const Content = ({search}) => {
           </tr>
         </thead>
         <tbody>
-          {data.filter(statusFilter => ((
-            (value !== "all") ? statusFilter.Status.toString().toLowerCase() === value.toLowerCase() : statusFilter
-          ))).filter(filteredData => ((
-            filteredData.Sample_ID.toString().toLowerCase() + " " +
-            filteredData.Back_Label_Plate.toString().toLowerCase() + " " +
-            filteredData.Sample_Name.toString().toLowerCase() + " " +
-            filteredData.Art_Type_BL.toString().toLowerCase() + " " +
-            filteredData.Status.toString().toLowerCase()
-            )).includes(search.toLowerCase())).map((data) => (
-            <tr key={data.Sample_ID}>
-              <td>{data.Sample_ID}</td>
-              <td>{data.Back_Label_Plate}</td>
-              <td>{data.Sample_Name}</td>
-              <td>{data.Art_Type_BL}</td>
-              <td>{data.Status}</td>              
-            </tr>
-          ))}
-          {data.filter(statusFilter => ((
-            (value !== "all") ? statusFilter.Status_FL.toString().toLowerCase() === value.toLowerCase() : statusFilter
-          ))).filter(filteredData => ((
-            filteredData.Sample_ID.toString().toLowerCase() + " " +
-            filteredData.Face_Label_Plate.toString().toLowerCase() + " " +
-            filteredData.Sample_Name.toString().toLowerCase() + " " +
-            filteredData.Art_Type_FL.toString().toLowerCase() + " " +
-            filteredData.Status_FL.toString().toLowerCase()
-            )).includes(search.toLowerCase())).map((data) => (
-            <tr key={data.Sample_ID}>
-              <td>{data.Sample_ID}</td>
-              <td>{data.Face_Label_Plate}</td>
-              <td>{data.Sample_Name}</td>
-              <td>{data.Art_Type_FL}</td>
-              <td>{data.Status_FL}</td>              
-            </tr>
-          ))}
+          {data
+            .filter((statusFilter) =>
+              value !== "all"
+                ? statusFilter.Status.toString().toLowerCase() ===
+                  value.toLowerCase()
+                : statusFilter
+            )
+            .filter((filteredData) =>
+              (
+                filteredData.Sample_ID.toString().toLowerCase() +
+                " " +
+                filteredData.Back_Label_Plate.toString().toLowerCase() +
+                " " +
+                filteredData.Sample_Name.toString().toLowerCase() +
+                " " +
+                filteredData.Art_Type_BL.toString().toLowerCase() +
+                " " +
+                filteredData.Status.toString().toLowerCase()
+              ).includes(search.toLowerCase())
+            )
+            .map((data) => (
+              <tr
+                key={data.Sample_ID}
+                className={statusColoring(data.Status)}
+                onClick={() =>
+                  showJobModal(
+                    data.Sample_ID +
+                      "," +
+                      data.Art_Type_BL +
+                      "," +
+                      data.Manufacturer_Product_Color_ID
+                  )
+                }
+              >
+                <td>{data.Sample_ID}</td>
+                <td>{data.Back_Label_Plate}</td>
+                <td>{data.Sample_Name}</td>
+                <td>{data.Art_Type_BL}</td>
+                <td>{data.Status}</td>
+              </tr>
+            ))}
+          {data
+            .filter((statusFilter) =>
+              value !== "all"
+                ? statusFilter.Status_FL.toString().toLowerCase() ===
+                  value.toLowerCase()
+                : statusFilter
+            )
+            .filter((filteredData) =>
+              (
+                filteredData.Sample_ID.toString().toLowerCase() +
+                " " +
+                filteredData.Face_Label_Plate.toString().toLowerCase() +
+                " " +
+                filteredData.Sample_Name.toString().toLowerCase() +
+                " " +
+                filteredData.Art_Type_FL.toString().toLowerCase() +
+                " " +
+                filteredData.Status_FL.toString().toLowerCase()
+              ).includes(search.toLowerCase())
+            )
+            .map((data) => (
+              <tr
+                key={data.Sample_ID}
+                className={statusColoring(data.Status_FL)}
+                onClick={() =>
+                  showJobModal(
+                    data.Sample_ID +
+                      "," +
+                      data.Art_Type_FL +
+                      "," +
+                      data.Manufacturer_Product_Color_ID
+                  )
+                }
+              >
+                <td>{data.Sample_ID}</td>
+                <td>{data.Face_Label_Plate}</td>
+                <td>{data.Sample_Name}</td>
+                <td>{data.Art_Type_FL}</td>
+                <td>{data.Status_FL}</td>
+              </tr>
+            ))}
         </tbody>
       </Table>
+      <Modal
+        show={isJobModalVisible}
+        onHide={handleJobModalCancel}
+        backdrop={true}
+        keyboard={false}
+      >
+        {console.log(jobId)}
+        <Modal.Header closeButton>
+          <Modal.Title>Job Info</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {type === "Hard Surface" ? (
+            <JobInfoHS type={type} id={jobId} />
+          ) : (
+            <JobInfoSS type={type} id={jobId} />
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleJobModalCancel}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </main>
   );
 };

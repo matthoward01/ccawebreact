@@ -1,11 +1,10 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
-const Navigation = ({search, setSearch}) => {
+const Navigation = ({ search, setSearch }) => {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
