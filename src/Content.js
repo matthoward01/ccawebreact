@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, CSSProperties } from "react";
 import {
   Dropdown,
   Table,
@@ -53,20 +53,20 @@ const Content = ({ search }) => {
     setValue(val);
   };
 
-  const statusColoring = (currentStatus) => {
+  function statusColoring(currentStatus) {
     var color = "";
 
     if (currentStatus === "Approved") {
-      color = "table-success";
+      color = 'green'
     }
     if (currentStatus === "Waiting for Approval") {
-      color = "table-warning";
+      color = 'yellow'
     }
     if (currentStatus === "Rejected") {
-      color = "table-danger";
+      color = 'red'
     }
     if (currentStatus === "Questions") {
-      color = "table-info";
+      color = 'lightblue'
     }
     return color;
   };
@@ -141,10 +141,13 @@ const Content = ({ search }) => {
         <thead>
           <tr>
             <th>Sample ID</th>
-            <th>Plate</th>
+            <th>FL Plate</th>
+            <th>BL Plate</th>
             <th>Style</th>
-            <th>Template</th>
-            <th>Status</th>
+            <th>FL Template</th>
+            <th>BL Template</th>
+            <th>FL Status</th>
+            <th>BL Status</th>
           </tr>
         </thead>
         <tbody>
@@ -159,11 +162,17 @@ const Content = ({ search }) => {
               (
                 filteredData.Sample_ID.toString().toLowerCase() +
                 " " +
+                filteredData.Face_Label_Plate.toString().toLowerCase() +
+                " " +
                 filteredData.Back_Label_Plate.toString().toLowerCase() +
                 " " +
                 filteredData.Sample_Name.toString().toLowerCase() +
                 " " +
+                filteredData.Art_Type_FL.toString().toLowerCase() +
+                " " +
                 filteredData.Art_Type_BL.toString().toLowerCase() +
+                " " +
+                filteredData.Status_FL.toString().toLowerCase() +
                 " " +
                 filteredData.Status.toString().toLowerCase()
               ).includes(search.toLowerCase())
@@ -171,53 +180,9 @@ const Content = ({ search }) => {
             .map((data) => (
               <tr
                 key={data.Sample_ID}
-                className={statusColoring(data.Status)}
                 onClick={() =>
                   showJobModal(
                     data.Sample_ID +
-                      "," +
-                      data.Art_Type_BL +
-                      "," +
-                      data.Manufacturer_Product_Color_ID
-                  )
-                }
-              >
-                <td>{data.Sample_ID}</td>
-                <td>{data.Back_Label_Plate}</td>
-                <td>{data.Sample_Name}</td>
-                <td>{data.Art_Type_BL}</td>
-                <td>{data.Status}</td>
-              </tr>
-            ))}
-          {data
-            .filter((statusFilter) =>
-              value !== "all"
-                ? statusFilter.Status_FL.toString().toLowerCase() ===
-                  value.toLowerCase()
-                : statusFilter
-            )
-            .filter((filteredData) =>
-              (
-                filteredData.Sample_ID.toString().toLowerCase() +
-                " " +
-                filteredData.Face_Label_Plate.toString().toLowerCase() +
-                " " +
-                filteredData.Sample_Name.toString().toLowerCase() +
-                " " +
-                filteredData.Art_Type_FL.toString().toLowerCase() +
-                " " +
-                filteredData.Status_FL.toString().toLowerCase()
-              ).includes(search.toLowerCase())
-            )
-            .map((data) => (
-              <tr
-                key={data.Sample_ID}
-                className={statusColoring(data.Status_FL)}
-                onClick={() =>
-                  showJobModal(
-                    data.Sample_ID +
-                      "," +
-                      data.Art_Type_FL +
                       "," +
                       data.Manufacturer_Product_Color_ID
                   )
@@ -225,9 +190,12 @@ const Content = ({ search }) => {
               >
                 <td>{data.Sample_ID}</td>
                 <td>{data.Face_Label_Plate}</td>
+                <td>{data.Back_Label_Plate}</td>
                 <td>{data.Sample_Name}</td>
                 <td>{data.Art_Type_FL}</td>
-                <td>{data.Status_FL}</td>
+                <td>{data.Art_Type_BL}</td>
+                <td style={{backgroundColor: statusColoring(data.Status_FL)}}>{data.Status_FL}</td>
+                <td style={{backgroundColor: statusColoring(data.Status)}}>{data.Status}</td>
               </tr>
             ))}
         </tbody>
