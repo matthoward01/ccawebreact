@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, CSSProperties } from "react";
+import { useState, useEffect } from "react";
 import {
   Dropdown,
   Table,
@@ -57,19 +57,19 @@ const Content = ({ search }) => {
     var color = "";
 
     if (currentStatus === "Approved") {
-      color = 'green'
+      color = "green";
     }
     if (currentStatus === "Waiting for Approval") {
-      color = 'yellow'
+      color = "yellow";
     }
     if (currentStatus === "Rejected") {
-      color = 'red'
+      color = "red";
     }
     if (currentStatus === "Questions") {
-      color = 'lightblue'
+      color = "lightblue";
     }
     return color;
-  };
+  }
 
   const showJobModal = (id) => {
     console.log("Passed ID:" + id);
@@ -182,9 +182,7 @@ const Content = ({ search }) => {
                 key={data.Sample_ID}
                 onClick={() =>
                   showJobModal(
-                    data.Sample_ID +
-                      "," +
-                      data.Manufacturer_Product_Color_ID
+                    data.Sample_ID + "," + data.Manufacturer_Product_Color_ID
                   )
                 }
               >
@@ -194,8 +192,12 @@ const Content = ({ search }) => {
                 <td>{data.Sample_Name}</td>
                 <td>{data.Art_Type_FL}</td>
                 <td>{data.Art_Type_BL}</td>
-                <td style={{backgroundColor: statusColoring(data.Status_FL)}}>{data.Status_FL}</td>
-                <td style={{backgroundColor: statusColoring(data.Status)}}>{data.Status}</td>
+                <td style={{ backgroundColor: statusColoring(data.Status_FL) }}>
+                  {data.Status_FL}
+                </td>
+                <td style={{ backgroundColor: statusColoring(data.Status) }}>
+                  {data.Status}
+                </td>
               </tr>
             ))}
         </tbody>
@@ -206,13 +208,16 @@ const Content = ({ search }) => {
         backdrop={true}
         keyboard={false}
       >
-        {console.log(jobId)}
         <Modal.Header closeButton>
           <Modal.Title>Job Info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {type === "Hard Surface" ? (
-            <JobInfoHS type={type} id={jobId} />
+            <JobInfoHS
+              handleJobModalCancel={handleJobModalCancel}
+              type={type}
+              id={jobId}
+            />
           ) : (
             <JobInfoSS type={type} id={jobId} />
           )}

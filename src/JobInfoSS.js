@@ -3,13 +3,13 @@ import { Modal } from "react-bootstrap";
 import { variables } from "./Variable";
 import { useEffect, useState } from "react";
 
-const JobInfo = ({ type, id }) => {
+const JobInfoSS = ({ type, id }) => {
   const [jobData, setJobData] = useState([]);
   //console.log(id);
   useEffect(() => {
-    if (type === "Hard Surface") {
-      console.log(variables.API_CCA_Job + id);
-      fetch(variables.API_CCA_Job + id)
+    if (type === "Soft Surface") {
+      console.log(variables.API_CCA_JobSS + id);
+      fetch(variables.API_CCA_JobSS + id)
         .then((response) => {
           //console.log("resp", response);
           return response.json();
@@ -65,4 +65,4 @@ const JobInfo = ({ type, id }) => {
   );
 };
 
-export default JobInfo;
+export default JobInfoSS;
