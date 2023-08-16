@@ -12,21 +12,21 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
   const [changeData, setChangeData] = useState("");
   //console.log(id);
   useEffect(() => {
-      console.log(variables.API_CCASS_Job + id);
-      fetch(variables.API_CCASS_Job + id)
-        .then((response) => {
-          //console.log("resp", response);
-          return response.json();
-        })
-        .then((dbData) => {
-          //console.log("result", data);
-          //setJobData(dbData);
-          setJobData(dbData);
-          //console.log(dbData);
-        });
+    //console.log(variables.API_CCASS_Job + id);
+    fetch(variables.API_CCASS_Job + id)
+      .then((response) => {
+        //console.log("resp", response);
+        return response.json();
+      })
+      .then((dbData) => {
+        //console.log("result", data);
+        //setJobData(dbData);
+        setJobData(dbData);
+        //console.log(dbData);
+      });
   }, [id]);
   const showChangeModal = (id) => {
-    console.log("Passed ID:" + id);
+    //console.log("Passed ID:" + id);
     setChangeId(id);
     setIsChangeModalVisible(true);
   };
@@ -37,8 +37,20 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
   if (!jobData.length) {
     return <h1>Loading...</h1>;
   }
-  const uniqueMap = new Map(jobData.map(pos => [pos.Division_Label_Name, pos]))
-  const uniqueLogos = [...uniqueMap.values()];
+  const uniqueLogoMap = new Map(
+    jobData.map((pos) => [pos.Division_Label_Name, pos])
+  );
+  const uniqueLogos = [...uniqueLogoMap.values()];
+  const uniqueColorsMap = new Map(
+    jobData
+      .sort((a, b) =>
+        a["Color_Sequence"]
+          .padStart(2, "0")
+          .localeCompare(b["Color_Sequence"].padStart(2, "0"))
+      )
+      .map((pos) => [pos.Merch_Color_Name, pos])
+  );
+  const uniqueColors = [...uniqueColorsMap.values()];
   return (
     <Fragment>
       {jobData[0].Change === "" ? (
@@ -59,9 +71,8 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
         <li>Division: {" " + jobData[0].Division_List}</li>
         <li>Style Name: {" " + jobData[0].Sample_Name}</li>
         <li>Color: {" " + jobData[0].Feeler}</li>
-        {console.log(jobData[0])}
         <li>Size Name: {" " + jobData[0].Size_Name}</li>
-       
+
         <li>Roomscene Name: {jobData[0].Roomscene}</li>
       </ul>
       <p>Logos Used:</p>
@@ -70,6 +81,24 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
           return (
             <Fragment>
               <li>{job.Division_Label_Name}</li>
+            </Fragment>
+          );
+        })}
+      </ul>
+      <p>
+        Color List: <b>{" (" + uniqueColors.length + ")"}</b>
+      </p>
+      <ul>
+        {uniqueColors.map((job) => {
+          return (
+            <Fragment>
+              <li>
+                {job.Merch_Color_Name === jobData[0].Feeler ? (
+                  <b>{job.Merch_Color_Name}</b>
+                ) : (
+                  job.Merch_Color_Name
+                )}
+              </li>
             </Fragment>
           );
         })}
@@ -94,7 +123,13 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
               jobData={jobData}
             />
           ) : (
-            <JobChangeSS type={type} id={changeId} />
+            <JobChangeSS
+              setChangeData={setChangeData}
+              handleJobModalCancel={handleJobModalCancel}
+              handleChangeModalCancel={handleChangeModalCancel}
+              Sample_ID={jobData[0].Sample_ID}
+              jobData={jobData}
+            />
           )}
         </Modal.Body>
         <Modal.Footer></Modal.Footer>

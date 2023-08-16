@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dropdown,
   Table,
@@ -17,24 +17,28 @@ import JobInfoSS from "./JobInfoSS";
 const Content = ({ search }) => {
   const [data, setData] = useState([]);
   const [value, setValue] = useState("all");
-  const [type, setType] = useState("Hard Surface");
+  const [type, setType] = useState(
+    JSON.parse(localStorage.getItem("type")) || "Hard Surface"
+  );
   //const [jobData, setJobData] = useState([]);
   const [isJobModalVisible, setIsJobModalVisible] = useState(false);
   const [jobId, setJobId] = useState("");
   const [sorting, setSorting] = useState("Sample_ID");
   const [sortDirection, setSortDirection] = useState(true);
-  const [currentStatus, setCurrentStatus] = useState('')
+  const [currentStatus, setCurrentStatus] = useState("");
 
   useEffect(() => {
-    getData()
+    getData();
   }, [type]);
 
-  const handleTypeChange = (type) => {
-    type === "Hard Surface" ? setType(type) : setType(type);
+  const handleTypeChange = (typeChoice) => {
+    typeChoice === "Hard Surface" ? setType(typeChoice) : setType(typeChoice);
+    localStorage.setItem("type", JSON.stringify(typeChoice));
   };
 
-  function getData(){
+  function getData() {
     if (type === "Hard Surface") {
+      setData([]);
       fetch(variables.API_CCA)
         .then((response) => {
           //console.log("resp", response);
@@ -45,6 +49,7 @@ const Content = ({ search }) => {
           setData(dbData);
         });
     } else {
+      setData([]);
       fetch(variables.API_CCASS)
         .then((response) => {
           //console.log("resp", response);
@@ -57,17 +62,19 @@ const Content = ({ search }) => {
     }
   }
 
-  const handleFLStatusChange = (newStatus) => {
-    console.log(newStatus)
-    var splitResponse = newStatus.split(',')
+  const handleStatusChange = (newStatus) => {
+    //console.log(newStatus);
+    
+    var splitResponse = newStatus.split(",");
     var Status_Type = splitResponse[0];
     var Sample_ID = splitResponse[1];
     var New_Status = splitResponse[2];
-    console.log(`Status Type: ${Status_Type}, Sample ID: ${Sample_ID}, New Status: ${New_Status}`)
-    var api = variables.API_CCA_Job + "Status"
-    if (type!=="Hard Surface")
-    {
-      api = variables.API_CCASS_Job + "Status"
+    /* console.log(
+      `Status Type: ${Status_Type}, Sample ID: ${Sample_ID}, New Status: ${New_Status}`
+    ); */
+    var api = variables.API_CCA_Job + "Status";
+    if (type !== "Hard Surface") {
+      api = variables.API_CCASS_Job + "Status";
     }
     fetch(api, {
       method: "PUT",
@@ -85,13 +92,19 @@ const Content = ({ search }) => {
       .then(
         (result) => {
           //alert(result);
-          setCurrentStatus(New_Status)
-          getData()
+          setCurrentStatus(New_Status);
+          getData();
+          scrollToElement(Sample_ID);
         },
         (error) => {
           alert("Failed");
         }
       );
+  };
+
+  const scrollToElement = (scrollId) => {
+    const container = document.getElementById(scrollId);
+    container.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleChange = (val) => {
@@ -173,7 +186,7 @@ const Content = ({ search }) => {
   }
 
   const showJobModal = (id) => {
-    console.log("Passed ID:" + id);
+    //console.log("Passed ID:" + id);
     setJobId(id);
     setIsJobModalVisible(true);
   };
@@ -284,11 +297,15 @@ const Content = ({ search }) => {
               ).includes(search.toLowerCase())
             )
             .map((data) => (
-              <tr key={data.Sample_ID}>
+              <tr key={data.Sample_ID} id={data.Sample_ID}>
                 <td
                   onClick={() =>
                     showJobModal(
-                      type==="Hard Surface" ? data.Sample_ID + "," + data.Manufacturer_Product_Color_ID : data.Sample_ID
+                      type === "Hard Surface"
+                        ? data.Sample_ID +
+                            "," +
+                            data.Manufacturer_Product_Color_ID
+                        : data.Sample_ID + "," + data.Supplier_Product_Name
                     )
                   }
                 >
@@ -297,56 +314,91 @@ const Content = ({ search }) => {
                 <td
                   onClick={() =>
                     showJobModal(
-                      type==="Hard Surface" ? data.Sample_ID + "," + data.Manufacturer_Product_Color_ID : data.Sample_ID
+                      type === "Hard Surface"
+                        ? data.Sample_ID +
+                            "," +
+                            data.Manufacturer_Product_Color_ID
+                        : data.Sample_ID + "," + data.Supplier_Product_Name
                     )
-                  }>{data.Face_Label_Plate}</td>
+                  }
+                >
+                  {data.Face_Label_Plate}
+                </td>
                 <td
                   onClick={() =>
                     showJobModal(
-                      type==="Hard Surface" ? data.Sample_ID + "," + data.Manufacturer_Product_Color_ID : data.Sample_ID
+                      type === "Hard Surface"
+                        ? data.Sample_ID +
+                            "," +
+                            data.Manufacturer_Product_Color_ID
+                        : data.Sample_ID + "," + data.Supplier_Product_Name
                     )
-                  }>{data.Back_Label_Plate}</td>
+                  }
+                >
+                  {data.Back_Label_Plate}
+                </td>
                 <td
                   onClick={() =>
                     showJobModal(
-                      type==="Hard Surface" ? data.Sample_ID + "," + data.Manufacturer_Product_Color_ID : data.Sample_ID
+                      type === "Hard Surface"
+                        ? data.Sample_ID +
+                            "," +
+                            data.Manufacturer_Product_Color_ID
+                        : data.Sample_ID + "," + data.Supplier_Product_Name
                     )
-                  }>{data.Sample_Name + " - " + data.Feeler}</td>
+                  }
+                >
+                  {data.Sample_Name + " - " + data.Feeler}
+                </td>
                 <td
                   onClick={() =>
                     showJobModal(
-                      type==="Hard Surface" ? data.Sample_ID + "," + data.Manufacturer_Product_Color_ID : data.Sample_ID
+                      type === "Hard Surface"
+                        ? data.Sample_ID +
+                            "," +
+                            data.Manufacturer_Product_Color_ID
+                        : data.Sample_ID + "," + data.Supplier_Product_Name
                     )
-                  }>{data.Art_Type_FL}</td>
+                  }
+                >
+                  {data.Art_Type_FL}
+                </td>
                 <td
                   onClick={() =>
                     showJobModal(
-                      type==="Hard Surface" ? data.Sample_ID + "," + data.Manufacturer_Product_Color_ID : data.Sample_ID
+                      type === "Hard Surface"
+                        ? data.Sample_ID +
+                            "," +
+                            data.Manufacturer_Product_Color_ID
+                        : data.Sample_ID + "," + data.Supplier_Product_Name
                     )
-                  }>{data.Art_Type_BL}</td>
+                  }
+                >
+                  {data.Art_Type_BL}
+                </td>
                 <td>
                   <DropdownButton
                     variant={statusColoringx(data.Status_FL)}
                     title={data.Status_FL}
-                    onSelect={handleFLStatusChange}
+                    onSelect={handleStatusChange}
                   >
                     <Dropdown.Item
-                      eventKey={['fl', data.Sample_ID, 'Approved']}
+                      eventKey={["fl", data.Sample_ID, "Approved"]}
                     >
                       Approved
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={['fl', data.Sample_ID, 'Waiting for Approval']}
+                      eventKey={["fl", data.Sample_ID, "Waiting for Approval"]}
                     >
                       Waiting for Approval
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={['fl', data.Sample_ID, 'Questions']}
+                      eventKey={["fl", data.Sample_ID, "Questions"]}
                     >
                       Questions
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={['fl', data.Sample_ID, 'Rejected']}
+                      eventKey={["fl", data.Sample_ID, "Rejected"]}
                     >
                       Rejected
                     </Dropdown.Item>
@@ -358,30 +410,30 @@ const Content = ({ search }) => {
                   <DropdownButton
                     variant={statusColoringx(data.Status)}
                     title={data.Status}
-                    onSelect={handleFLStatusChange}
+                    onSelect={handleStatusChange}
                   >
                     <Dropdown.Item
-                      eventKey={['bl', data.Sample_ID, 'Approved']}
+                      eventKey={["bl", data.Sample_ID, "Approved"]}
                     >
                       Approved
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={['bl', data.Sample_ID, 'Waiting for Approval']}
+                      eventKey={["bl", data.Sample_ID, "Waiting for Approval"]}
                     >
                       Waiting for Approval
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={['bl', data.Sample_ID, 'Questions']}
+                      eventKey={["bl", data.Sample_ID, "Questions"]}
                     >
                       Questions
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={['bl', data.Sample_ID, 'Rejected']}
+                      eventKey={["bl", data.Sample_ID, "Rejected"]}
                     >
                       Rejected
                     </Dropdown.Item>
                   </DropdownButton>
-                {/* <td style={{ backgroundColor: statusColoring(data.Status) }}>
+                  {/* <td style={{ backgroundColor: statusColoring(data.Status) }}>
                   {data.Status} */}
                 </td>
               </tr>
@@ -389,7 +441,7 @@ const Content = ({ search }) => {
         </tbody>
       </Table>
       <Modal
-      size="lg"
+        size="lg"
         show={isJobModalVisible}
         onHide={handleJobModalCancel}
         backdrop={true}
@@ -406,7 +458,11 @@ const Content = ({ search }) => {
               id={jobId}
             />
           ) : (
-            <JobInfoSS handleJobModalCancel={handleJobModalCancel} type={type} id={jobId} />
+            <JobInfoSS
+              handleJobModalCancel={handleJobModalCancel}
+              type={type}
+              id={jobId}
+            />
           )}
         </Modal.Body>
         <Modal.Footer>

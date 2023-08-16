@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { variables } from "./Variable";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 
 const JobChangeSS = ({
