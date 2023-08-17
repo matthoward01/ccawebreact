@@ -11,12 +11,12 @@ const Navigation = ({ search, setSearch }) => {
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto my-2 my-lg-0">
-            <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Status</Nav.Link>
+            <Nav.Link>Status</Nav.Link>
             <Nav.Link href="#action2">Update DB</Nav.Link>
           </Nav>
           <Form className="d-flex">
             <Form.Control
+              id="search"
               type="search"
               placeholder="Search"
               className="me-2"

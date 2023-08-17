@@ -14,7 +14,7 @@ const JobChangeSS = ({
   //console.log(id);
 
   const handleSubmit = () => {
-    console.log(`ID: ${Sample_ID}, Change: ${change}`);
+    //console.log(`ID: ${Sample_ID}, Change: ${change}`);
 
     fetch(variables.API_CCASS_Job + "Change", {
       method: "PUT",

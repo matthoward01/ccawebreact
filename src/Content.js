@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   Dropdown,
   Table,
@@ -13,19 +13,21 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import { variables } from "./Variable";
 import JobInfoHS from "./JobInfoHS";
 import JobInfoSS from "./JobInfoSS";
+import Status from "./Status";
 
 const Content = ({ search }) => {
   const [data, setData] = useState([]);
-  const [value, setValue] = useState("all");
+  const [statusValue, setStatusValue] = useState("all");
+  const [programValue, setProgramValue] = useState("all");
   const [type, setType] = useState(
     JSON.parse(localStorage.getItem("type")) || "Hard Surface"
   );
   //const [jobData, setJobData] = useState([]);
   const [isJobModalVisible, setIsJobModalVisible] = useState(false);
+  const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
   const [jobId, setJobId] = useState("");
   const [sorting, setSorting] = useState("Sample_ID");
   const [sortDirection, setSortDirection] = useState(true);
-  const [currentStatus, setCurrentStatus] = useState("");
 
   useEffect(() => {
     getData();
@@ -64,7 +66,7 @@ const Content = ({ search }) => {
 
   const handleStatusChange = (newStatus) => {
     //console.log(newStatus);
-    
+
     var splitResponse = newStatus.split(",");
     var Status_Type = splitResponse[0];
     var Sample_ID = splitResponse[1];
@@ -92,7 +94,6 @@ const Content = ({ search }) => {
       .then(
         (result) => {
           //alert(result);
-          setCurrentStatus(New_Status);
           getData();
           scrollToElement(Sample_ID);
         },
@@ -104,11 +105,15 @@ const Content = ({ search }) => {
 
   const scrollToElement = (scrollId) => {
     const container = document.getElementById(scrollId);
-    container.scrollIntoView({ behavior: 'smooth' });
+    container.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleChange = (val) => {
-    setValue(val);
+    setStatusValue(val);
+  };
+
+  const handleProgramFilter = (val) => {
+    setProgramValue(val);
   };
 
   function sortingBy(sortChoice) {
@@ -154,23 +159,6 @@ const Content = ({ search }) => {
     var color = "";
 
     if (currentStatus === "Approved") {
-      color = "green";
-    }
-    if (currentStatus === "Waiting for Approval") {
-      color = "yellow";
-    }
-    if (currentStatus === "Rejected") {
-      color = "red";
-    }
-    if (currentStatus === "Questions") {
-      color = "lightblue";
-    }
-    return color;
-  }
-  function statusColoringx(currentStatus) {
-    var color = "";
-
-    if (currentStatus === "Approved") {
       color = "success";
     }
     if (currentStatus === "Waiting for Approval") {
@@ -185,6 +173,10 @@ const Content = ({ search }) => {
     return color;
   }
 
+  const showStatusModal = () => {
+    setIsStatusModalVisible(true);
+  };
+
   const showJobModal = (id) => {
     //console.log("Passed ID:" + id);
     setJobId(id);
@@ -194,13 +186,23 @@ const Content = ({ search }) => {
   const handleJobModalCancel = () => {
     setIsJobModalVisible(false);
   };
+  const handleStatusModalCancel = () => {
+    setIsStatusModalVisible(false);
+  };
 
   if (!data.length) {
     return <h1>Loading...</h1>;
   }
+
+  const uniqueProgramMap = new Map(data.map((pos) => [pos.Program, pos]));
+  const uniqueProgram = [...uniqueProgramMap.values()];
+
   return (
     <main>
       <div>
+        <Button variant="outline-secondary" onClick={showStatusModal}>
+          Status
+        </Button>
         <DropdownButton
           as={ButtonGroup}
           variant="outline-secondary"
@@ -214,7 +216,7 @@ const Content = ({ search }) => {
         <ToggleButtonGroup
           type="radio"
           name="options"
-          defaultValue={value}
+          defaultValue={statusValue}
           onChange={handleChange}
         >
           <ToggleButton id="tbg-btn-1" variant="outline-secondary" value="all">
@@ -249,6 +251,22 @@ const Content = ({ search }) => {
             Rejection
           </ToggleButton>
         </ToggleButtonGroup>
+        <DropdownButton
+          as={ButtonGroup}
+          variant="outline-secondary"
+          align="start"
+          title={programValue === "all" ? "All Programs" : programValue}
+          onSelect={handleProgramFilter}
+        >
+          <Dropdown.Item eventKey="all">All Programs</Dropdown.Item>
+          {uniqueProgram.map((prog) => {
+            return (
+              <Dropdown.Item eventKey={prog.Program}>
+                {prog.Program}
+              </Dropdown.Item>
+            );
+          })}
+        </DropdownButton>
       </div>
 
       <Table bordered hover>
@@ -272,10 +290,16 @@ const Content = ({ search }) => {
                 : (a, b) => b[sorting].localeCompare(a[sorting])
             )
             .filter((statusFilter) =>
-              value !== "all"
+              statusValue !== "all"
                 ? statusFilter.Status.toString().toLowerCase() ===
-                  value.toLowerCase()
+                  statusValue.toLowerCase()
                 : statusFilter
+            )
+            .filter((programFilter) =>
+              programValue !== "all"
+                ? programFilter.Program.toString().toLowerCase() ===
+                  programValue.toLowerCase()
+                : programFilter
             )
             .filter((filteredData) =>
               (
@@ -300,85 +324,49 @@ const Content = ({ search }) => {
               <tr key={data.Sample_ID} id={data.Sample_ID}>
                 <td
                   onClick={() =>
-                    showJobModal(
-                      type === "Hard Surface"
-                        ? data.Sample_ID +
-                            "," +
-                            data.Manufacturer_Product_Color_ID
-                        : data.Sample_ID + "," + data.Supplier_Product_Name
-                    )
+                    showJobModal(data.Sample_ID + "," + data.Program)
                   }
                 >
                   {data.Sample_ID}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(
-                      type === "Hard Surface"
-                        ? data.Sample_ID +
-                            "," +
-                            data.Manufacturer_Product_Color_ID
-                        : data.Sample_ID + "," + data.Supplier_Product_Name
-                    )
+                    showJobModal(data.Sample_ID + "," + data.Program)
                   }
                 >
                   {data.Face_Label_Plate}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(
-                      type === "Hard Surface"
-                        ? data.Sample_ID +
-                            "," +
-                            data.Manufacturer_Product_Color_ID
-                        : data.Sample_ID + "," + data.Supplier_Product_Name
-                    )
+                    showJobModal(data.Sample_ID + "," + data.Program)
                   }
                 >
                   {data.Back_Label_Plate}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(
-                      type === "Hard Surface"
-                        ? data.Sample_ID +
-                            "," +
-                            data.Manufacturer_Product_Color_ID
-                        : data.Sample_ID + "," + data.Supplier_Product_Name
-                    )
+                    showJobModal(data.Sample_ID + "," + data.Program)
                   }
                 >
                   {data.Sample_Name + " - " + data.Feeler}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(
-                      type === "Hard Surface"
-                        ? data.Sample_ID +
-                            "," +
-                            data.Manufacturer_Product_Color_ID
-                        : data.Sample_ID + "," + data.Supplier_Product_Name
-                    )
+                    showJobModal(data.Sample_ID + "," + data.Program)
                   }
                 >
                   {data.Art_Type_FL}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(
-                      type === "Hard Surface"
-                        ? data.Sample_ID +
-                            "," +
-                            data.Manufacturer_Product_Color_ID
-                        : data.Sample_ID + "," + data.Supplier_Product_Name
-                    )
+                    showJobModal(data.Sample_ID + "," + data.Program)
                   }
                 >
                   {data.Art_Type_BL}
                 </td>
                 <td>
                   <DropdownButton
-                    variant={statusColoringx(data.Status_FL)}
+                    variant={statusColoring(data.Status_FL)}
                     title={data.Status_FL}
                     onSelect={handleStatusChange}
                   >
@@ -403,12 +391,10 @@ const Content = ({ search }) => {
                       Rejected
                     </Dropdown.Item>
                   </DropdownButton>
-                  {/* <td style={{ backgroundColor: statusColoring(data.Status_FL) }}> */}
-                  {/* {data.Status_FL} */}
                 </td>
                 <td>
                   <DropdownButton
-                    variant={statusColoringx(data.Status)}
+                    variant={statusColoring(data.Status)}
                     title={data.Status}
                     onSelect={handleStatusChange}
                   >
@@ -433,8 +419,6 @@ const Content = ({ search }) => {
                       Rejected
                     </Dropdown.Item>
                   </DropdownButton>
-                  {/* <td style={{ backgroundColor: statusColoring(data.Status) }}>
-                  {data.Status} */}
                 </td>
               </tr>
             ))}
@@ -467,6 +451,25 @@ const Content = ({ search }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleJobModalCancel}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Modal
+        size="lg"
+        show={isStatusModalVisible}
+        onHide={handleStatusModalCancel}
+        backdrop={true}
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Status</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Status />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleStatusModalCancel}>
             Close
           </Button>
         </Modal.Footer>

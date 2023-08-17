@@ -72,7 +72,6 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
         <li>Style Name: {" " + jobData[0].Sample_Name}</li>
         <li>Color: {" " + jobData[0].Feeler}</li>
         <li>Size Name: {" " + jobData[0].Size_Name}</li>
-
         <li>Roomscene Name: {jobData[0].Roomscene}</li>
       </ul>
       <p>Logos Used:</p>
