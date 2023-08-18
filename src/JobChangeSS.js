@@ -16,7 +16,7 @@ const JobChangeSS = ({
   const handleSubmit = () => {
     //console.log(`ID: ${Sample_ID}, Change: ${change}`);
 
-    fetch(variables.API_CCASS_Job + "Change", {
+    fetch(variables.API_CCASS + "JobSS/Change", {
       method: "PUT",
       headers: {
         Accept: "application/json",

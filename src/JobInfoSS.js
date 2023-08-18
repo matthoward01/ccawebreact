@@ -13,7 +13,7 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
   //console.log(id);
   useEffect(() => {
     //console.log(variables.API_CCASS_Job + id);
-    fetch(variables.API_CCASS_Job + id)
+    fetch(variables.API_CCASS + "JobSS/" + id)
       .then((response) => {
         //console.log("resp", response);
         return response.json();

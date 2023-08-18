@@ -13,8 +13,8 @@ const JobInfoHS = ({ handleJobModalCancel, type, id }) => {
   //console.log(id);
   useEffect(() => {
     if (type === "Hard Surface") {
-      console.log(variables.API_CCA_Job + id);
-      fetch(variables.API_CCA_Job + id)
+      //console.log(variables.API_CCA  + "JobHS/" + id);
+      fetch(variables.API_CCA  + "JobHS/" + id)
         .then((response) => {
           //console.log("resp", response);
           return response.json();

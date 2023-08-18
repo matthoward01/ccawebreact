@@ -41,7 +41,7 @@ const Content = ({ search }) => {
   function getData() {
     if (type === "Hard Surface") {
       setData([]);
-      fetch(variables.API_CCA)
+      fetch(variables.API_CCA + "TableHS")
         .then((response) => {
           //console.log("resp", response);
           return response.json();
@@ -52,7 +52,7 @@ const Content = ({ search }) => {
         });
     } else {
       setData([]);
-      fetch(variables.API_CCASS)
+      fetch(variables.API_CCASS + "TableSS")
         .then((response) => {
           //console.log("resp", response);
           return response.json();
@@ -74,9 +74,9 @@ const Content = ({ search }) => {
     /* console.log(
       `Status Type: ${Status_Type}, Sample ID: ${Sample_ID}, New Status: ${New_Status}`
     ); */
-    var api = variables.API_CCA_Job + "Status";
+    var api = variables.API_CCA + "JobHS/Status";
     if (type !== "Hard Surface") {
-      api = variables.API_CCASS_Job + "Status";
+      api = variables.API_CCASS_Job + "JobSS/Status";
     }
     fetch(api, {
       method: "PUT",
