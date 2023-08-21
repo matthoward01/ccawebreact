@@ -76,7 +76,7 @@ const Content = ({ search }) => {
     ); */
     var api = variables.API_CCA + "JobHS/Status";
     if (type !== "Hard Surface") {
-      api = variables.API_CCASS_Job + "JobSS/Status";
+      api = variables.API_CCASS + "JobSS/Status";
     }
     fetch(api, {
       method: "PUT",

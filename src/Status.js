@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import { variables } from "./Variable";
+import StatusSnippet from "./StatusSnippet";
 
 const Status = () => {
   const [hsProgramList, setHsProgramList] = useState([]);
@@ -40,12 +41,23 @@ const Status = () => {
   if (!hsProgramList.length || !ssProgramList.length) {
     return <h1>Loading...</h1>;
   }
+
+  const uniqueHsProgramsMap = new Map(
+    hsProgramList.map((pos) => [pos.Program, pos])
+  );
+  const uniqueHsPrograms = [...uniqueHsProgramsMap.values()];
+
+  const uniqueSsProgramsMap = new Map(
+    ssProgramList.map((pos) => [pos.Program, pos])
+  );
+  const uniqueSsPrograms = [...uniqueSsProgramsMap.values()];
+
   return (
-    <table>
+    <table width="100%">
       <tbody>
         <tr>
-          <td style={{verticalAlign: 'top'}}>
-            {ssProgramList.map((ssProgram) => (
+          <td style={{ verticalAlign: "top" }}>
+            {uniqueSsPrograms.map((ssProgram) => (
               <Fragment>
                 <b>{ssProgram.Program}</b>
                 <Table>
@@ -53,39 +65,54 @@ const Status = () => {
                     <tr>
                       <td>
                         <ul>
+                          <StatusSnippet
+                            status="Approved"
+                            program={ssProgram}
+                            programList={ssProgramList}
+                          />
+                          <StatusSnippet
+                            status="Waiting for Approval"
+                            program={ssProgram}
+                            programList={ssProgramList}
+                          />
+                          <StatusSnippet
+                            status="Questions"
+                            program={ssProgram}
+                            programList={ssProgramList}
+                          />
+                          <StatusSnippet
+                            status="Rejected"
+                            program={ssProgram}
+                            programList={ssProgramList}
+                          />
                           <li>
-                            Approved:
+                            Total:{" "}
+                            <b>
+                              {ssProgramList.filter(
+                                (l) => l.Program === ssProgram.Program
+                              ).length * 2}
+                            </b>
                             <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Waiting for Approval:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Questions:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Rejected:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Total:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
+                              <li>
+                                Front Labels:{" "}
+                                <b>
+                                  {
+                                    ssProgramList.filter(
+                                      (l) => l.Program === ssProgram.Program
+                                    ).length
+                                  }
+                                </b>
+                              </li>
+                              <li>
+                                Back Labels:{" "}
+                                <b>
+                                  {
+                                    ssProgramList.filter(
+                                      (l) => l.Program === ssProgram.Program
+                                    ).length
+                                  }
+                                </b>
+                              </li>
                             </ul>
                           </li>
                         </ul>
@@ -96,8 +123,8 @@ const Status = () => {
               </Fragment>
             ))}
           </td>
-          <td style={{verticalAlign: 'top'}}>
-            {hsProgramList.map((hsProgram) => (
+          <td style={{ verticalAlign: "top" }}>
+            {uniqueHsPrograms.map((hsProgram) => (
               <Fragment>
                 <b>{hsProgram.Program}</b>
                 <Table>
@@ -105,39 +132,54 @@ const Status = () => {
                     <tr>
                       <td>
                         <ul>
+                          <StatusSnippet
+                            status="Approved"
+                            program={hsProgram}
+                            programList={hsProgramList}
+                          />
+                          <StatusSnippet
+                            status="Waiting for Approval"
+                            program={hsProgram}
+                            programList={hsProgramList}
+                          />
+                          <StatusSnippet
+                            status="Questions"
+                            program={hsProgram}
+                            programList={hsProgramList}
+                          />
+                          <StatusSnippet
+                            status="Rejected"
+                            program={hsProgram}
+                            programList={hsProgramList}
+                          />
                           <li>
-                            Approved:
+                            Total:{" "}
+                            <b>
+                              {hsProgramList.filter(
+                                (l) => l.Program === hsProgram.Program
+                              ).length * 2}
+                            </b>
                             <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Waiting for Approval:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Questions:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Rejected:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
-                            </ul>
-                          </li>
-                          <li>
-                            Total:
-                            <ul>
-                              <li>Front Labels</li>
-                              <li>Back Labels</li>
+                              <li>
+                                Front Labels:{" "}
+                                <b>
+                                  {
+                                    hsProgramList.filter(
+                                      (l) => l.Program === hsProgram.Program
+                                    ).length
+                                  }
+                                </b>
+                              </li>
+                              <li>
+                                Back Labels:{" "}
+                                <b>
+                                  {
+                                    hsProgramList.filter(
+                                      (l) => l.Program === hsProgram.Program
+                                    ).length
+                                  }
+                                </b>
+                              </li>
                             </ul>
                           </li>
                         </ul>
