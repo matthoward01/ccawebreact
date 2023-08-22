@@ -1,68 +1,35 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Dropdown,
   Table,
   DropdownButton,
-  ButtonGroup,
   Modal,
   Button,
 } from "react-bootstrap";
-import ToggleButton from "react-bootstrap/ToggleButton";
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import { variables } from "./Variable";
 import JobInfoHS from "./JobInfoHS";
 import JobInfoSS from "./JobInfoSS";
-import Status from "./Status";
 
-const Content = ({ search }) => {
-  const [data, setData] = useState([]);
-  const [statusValue, setStatusValue] = useState("all");
+const Content = ({
+  search,
+  type,
+  getData,
+  data,
+  statusValue,
+  programValue,
+}) => {
+  /* const [statusValue, setStatusValue] = useState("all");
   const [programValue, setProgramValue] = useState("all");
   const [type, setType] = useState(
     JSON.parse(localStorage.getItem("type")) || "Hard Surface"
-  );
+  ); */
   //const [jobData, setJobData] = useState([]);
   const [isJobModalVisible, setIsJobModalVisible] = useState(false);
-  const [isStatusModalVisible, setIsStatusModalVisible] = useState(false);
+
   const [jobId, setJobId] = useState("");
   const [sorting, setSorting] = useState("Sample_ID");
   const [sortDirection, setSortDirection] = useState(true);
-
-  useEffect(() => {
-    getData();
-  }, [type]);
-
-  const handleTypeChange = (typeChoice) => {
-    typeChoice === "Hard Surface" ? setType(typeChoice) : setType(typeChoice);
-    localStorage.setItem("type", JSON.stringify(typeChoice));
-  };
-
-  function getData() {
-    if (type === "Hard Surface") {
-      setData([]);
-      fetch(variables.API_CCA + "TableHS")
-        .then((response) => {
-          //console.log("resp", response);
-          return response.json();
-        })
-        .then((dbData) => {
-          //console.log("result", data);
-          setData(dbData);
-        });
-    } else {
-      setData([]);
-      fetch(variables.API_CCASS + "TableSS")
-        .then((response) => {
-          //console.log("resp", response);
-          return response.json();
-        })
-        .then((dbData) => {
-          //console.log("result", data);
-          setData(dbData);
-        });
-    }
-  }
 
   const handleStatusChange = (newStatus) => {
     //console.log(newStatus);
@@ -106,14 +73,6 @@ const Content = ({ search }) => {
   const scrollToElement = (scrollId) => {
     const container = document.getElementById(scrollId);
     container.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const handleChange = (val) => {
-    setStatusValue(val);
-  };
-
-  const handleProgramFilter = (val) => {
-    setProgramValue(val);
   };
 
   function sortingBy(sortChoice) {
@@ -173,10 +132,6 @@ const Content = ({ search }) => {
     return color;
   }
 
-  const showStatusModal = () => {
-    setIsStatusModalVisible(true);
-  };
-
   const showJobModal = (id) => {
     //console.log("Passed ID:" + id);
     setJobId(id);
@@ -186,89 +141,13 @@ const Content = ({ search }) => {
   const handleJobModalCancel = () => {
     setIsJobModalVisible(false);
   };
-  const handleStatusModalCancel = () => {
-    setIsStatusModalVisible(false);
-  };
 
   if (!data.length) {
     return <h1>Loading...</h1>;
   }
 
-  const uniqueProgramMap = new Map(data.map((pos) => [pos.Program, pos]));
-  const uniqueProgram = [...uniqueProgramMap.values()];
-
   return (
     <main>
-      <div>
-        <Button variant="outline-secondary" onClick={showStatusModal}>
-          Status
-        </Button>
-        <DropdownButton
-          as={ButtonGroup}
-          variant="outline-secondary"
-          align="start"
-          title={type}
-          onSelect={handleTypeChange}
-        >
-          <Dropdown.Item eventKey="Hard Surface">Hard Surface</Dropdown.Item>
-          <Dropdown.Item eventKey="Soft Surface">Soft Surface</Dropdown.Item>
-        </DropdownButton>
-        <ToggleButtonGroup
-          type="radio"
-          name="options"
-          defaultValue={statusValue}
-          onChange={handleChange}
-        >
-          <ToggleButton id="tbg-btn-1" variant="outline-secondary" value="all">
-            Show All
-          </ToggleButton>
-          <ToggleButton
-            id="tbg-btn-2"
-            variant="outline-secondary"
-            value="Approved"
-          >
-            Approval
-          </ToggleButton>
-          <ToggleButton
-            id="tbg-btn-3"
-            variant="outline-secondary"
-            value="Waiting for Approval"
-          >
-            Waiting for Approval
-          </ToggleButton>
-          <ToggleButton
-            id="tbg-btn-4"
-            variant="outline-secondary"
-            value="Questions"
-          >
-            Question
-          </ToggleButton>
-          <ToggleButton
-            id="tbg-btn-5"
-            variant="outline-secondary"
-            value="Rejected"
-          >
-            Rejection
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <DropdownButton
-          as={ButtonGroup}
-          variant="outline-secondary"
-          align="start"
-          title={programValue === "all" ? "All Programs" : programValue}
-          onSelect={handleProgramFilter}
-        >
-          <Dropdown.Item eventKey="all">All Programs</Dropdown.Item>
-          {uniqueProgram.map((prog) => {
-            return (
-              <Dropdown.Item eventKey={prog.Program}>
-                {prog.Program}
-              </Dropdown.Item>
-            );
-          })}
-        </DropdownButton>
-      </div>
-
       <Table bordered hover>
         <thead>
           <tr>
@@ -451,25 +330,6 @@ const Content = ({ search }) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleJobModalCancel}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <Modal
-        size="lg"
-        show={isStatusModalVisible}
-        onHide={handleStatusModalCancel}
-        backdrop={true}
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Status</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Status />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleStatusModalCancel}>
             Close
           </Button>
         </Modal.Footer>

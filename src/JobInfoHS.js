@@ -12,20 +12,18 @@ const JobInfoHS = ({ handleJobModalCancel, type, id }) => {
   const [changeData, setChangeData] = useState("");
   //console.log(id);
   useEffect(() => {
-    if (type === "Hard Surface") {
-      //console.log(variables.API_CCA  + "JobHS/" + id);
-      fetch(variables.API_CCA  + "JobHS/" + id)
-        .then((response) => {
-          //console.log("resp", response);
-          return response.json();
-        })
-        .then((dbData) => {
-          //console.log("result", data);
-          //setJobData(dbData);
-          setJobData(dbData);
-          //console.log(dbData);
-        });
-    }
+    //console.log(variables.API_CCA  + "JobHS/" + id);
+    fetch(variables.API_CCA + "JobHS/" + id)
+      .then((response) => {
+        //console.log("resp", response);
+        return response.json();
+      })
+      .then((dbData) => {
+        //console.log("result", data);
+        //setJobData(dbData);
+        setJobData(dbData);
+        //console.log(dbData);
+      });
   }, [id]);
   const showChangeModal = (id) => {
     console.log("Passed ID:" + id);

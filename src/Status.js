@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Button } from "react-bootstrap";
 import { variables } from "./Variable";
 import StatusSnippet from "./StatusSnippet";
 
-const Status = () => {
+const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
   const [hsProgramList, setHsProgramList] = useState([]);
   const [ssProgramList, setSsProgramList] = useState([]);
 
@@ -11,6 +11,8 @@ const Status = () => {
     getHsPrograms();
     getSsPrograms();
   }, []);
+
+  //TODO: FIX STATUS UPDATING. CURRENTLY NEEDS REFRESH AFTER REFACTORING.
 
   function getHsPrograms() {
     setHsProgramList([]);
@@ -38,10 +40,6 @@ const Status = () => {
       });
   }
 
-  if (!hsProgramList.length || !ssProgramList.length) {
-    return <h1>Loading...</h1>;
-  }
-
   const uniqueHsProgramsMap = new Map(
     hsProgramList.map((pos) => [pos.Program, pos])
   );
@@ -53,146 +51,164 @@ const Status = () => {
   const uniqueSsPrograms = [...uniqueSsProgramsMap.values()];
 
   return (
-    <table width="100%">
-      <tbody>
-        <tr>
-          <td style={{ verticalAlign: "top" }}>
-            {uniqueSsPrograms.map((ssProgram) => (
-              <Fragment>
-                <b>{ssProgram.Program}</b>
-                <Table>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <ul>
-                          <StatusSnippet
-                            status="Approved"
-                            program={ssProgram}
-                            programList={ssProgramList}
-                          />
-                          <StatusSnippet
-                            status="Waiting for Approval"
-                            program={ssProgram}
-                            programList={ssProgramList}
-                          />
-                          <StatusSnippet
-                            status="Questions"
-                            program={ssProgram}
-                            programList={ssProgramList}
-                          />
-                          <StatusSnippet
-                            status="Rejected"
-                            program={ssProgram}
-                            programList={ssProgramList}
-                          />
-                          <li>
-                            Total:{" "}
-                            <b>
-                              {ssProgramList.filter(
-                                (l) => l.Program === ssProgram.Program
-                              ).length * 2}
-                            </b>
+    <Modal
+      size="lg"
+      show={isStatusModalVisible}
+      onHide={handleStatusModalCancel}
+      backdrop={true}
+      keyboard={false}
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>Status</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td style={{ verticalAlign: "top" }}>
+                {uniqueSsPrograms.map((ssProgram) => (
+                  <Fragment>
+                    <b>{ssProgram.Program}</b>
+                    <Table>
+                      <tbody>
+                        <tr>
+                          <td>
                             <ul>
+                              <StatusSnippet
+                                status="Approved"
+                                program={ssProgram}
+                                programList={ssProgramList}
+                              />
+                              <StatusSnippet
+                                status="Waiting for Approval"
+                                program={ssProgram}
+                                programList={ssProgramList}
+                              />
+                              <StatusSnippet
+                                status="Questions"
+                                program={ssProgram}
+                                programList={ssProgramList}
+                              />
+                              <StatusSnippet
+                                status="Rejected"
+                                program={ssProgram}
+                                programList={ssProgramList}
+                              />
                               <li>
-                                Front Labels:{" "}
+                                Total:{" "}
                                 <b>
-                                  {
-                                    ssProgramList.filter(
-                                      (l) => l.Program === ssProgram.Program
-                                    ).length
-                                  }
+                                  {ssProgramList.filter(
+                                    (l) => l.Program === ssProgram.Program
+                                  ).length * 2}
                                 </b>
-                              </li>
-                              <li>
-                                Back Labels:{" "}
-                                <b>
-                                  {
-                                    ssProgramList.filter(
-                                      (l) => l.Program === ssProgram.Program
-                                    ).length
-                                  }
-                                </b>
+                                <ul>
+                                  <li>
+                                    Front Labels:{" "}
+                                    <b>
+                                      {
+                                        ssProgramList.filter(
+                                          (l) => l.Program === ssProgram.Program
+                                        ).length
+                                      }
+                                    </b>
+                                  </li>
+                                  <li>
+                                    Back Labels:{" "}
+                                    <b>
+                                      {
+                                        ssProgramList.filter(
+                                          (l) => l.Program === ssProgram.Program
+                                        ).length
+                                      }
+                                    </b>
+                                  </li>
+                                </ul>
                               </li>
                             </ul>
-                          </li>
-                        </ul>
-                      </td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Fragment>
-            ))}
-          </td>
-          <td style={{ verticalAlign: "top" }}>
-            {uniqueHsPrograms.map((hsProgram) => (
-              <Fragment>
-                <b>{hsProgram.Program}</b>
-                <Table>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <ul>
-                          <StatusSnippet
-                            status="Approved"
-                            program={hsProgram}
-                            programList={hsProgramList}
-                          />
-                          <StatusSnippet
-                            status="Waiting for Approval"
-                            program={hsProgram}
-                            programList={hsProgramList}
-                          />
-                          <StatusSnippet
-                            status="Questions"
-                            program={hsProgram}
-                            programList={hsProgramList}
-                          />
-                          <StatusSnippet
-                            status="Rejected"
-                            program={hsProgram}
-                            programList={hsProgramList}
-                          />
-                          <li>
-                            Total:{" "}
-                            <b>
-                              {hsProgramList.filter(
-                                (l) => l.Program === hsProgram.Program
-                              ).length * 2}
-                            </b>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Fragment>
+                ))}
+              </td>
+              <td style={{ verticalAlign: "top" }}>
+                {uniqueHsPrograms.map((hsProgram) => (
+                  <Fragment>
+                    <b>{hsProgram.Program}</b>
+                    <Table>
+                      <tbody>
+                        <tr>
+                          <td>
                             <ul>
+                              <StatusSnippet
+                                status="Approved"
+                                program={hsProgram}
+                                programList={hsProgramList}
+                              />
+                              <StatusSnippet
+                                status="Waiting for Approval"
+                                program={hsProgram}
+                                programList={hsProgramList}
+                              />
+                              <StatusSnippet
+                                status="Questions"
+                                program={hsProgram}
+                                programList={hsProgramList}
+                              />
+                              <StatusSnippet
+                                status="Rejected"
+                                program={hsProgram}
+                                programList={hsProgramList}
+                              />
                               <li>
-                                Front Labels:{" "}
+                                Total:{" "}
                                 <b>
-                                  {
-                                    hsProgramList.filter(
-                                      (l) => l.Program === hsProgram.Program
-                                    ).length
-                                  }
+                                  {hsProgramList.filter(
+                                    (l) => l.Program === hsProgram.Program
+                                  ).length * 2}
                                 </b>
-                              </li>
-                              <li>
-                                Back Labels:{" "}
-                                <b>
-                                  {
-                                    hsProgramList.filter(
-                                      (l) => l.Program === hsProgram.Program
-                                    ).length
-                                  }
-                                </b>
+                                <ul>
+                                  <li>
+                                    Front Labels:{" "}
+                                    <b>
+                                      {
+                                        hsProgramList.filter(
+                                          (l) => l.Program === hsProgram.Program
+                                        ).length
+                                      }
+                                    </b>
+                                  </li>
+                                  <li>
+                                    Back Labels:{" "}
+                                    <b>
+                                      {
+                                        hsProgramList.filter(
+                                          (l) => l.Program === hsProgram.Program
+                                        ).length
+                                      }
+                                    </b>
+                                  </li>
+                                </ul>
                               </li>
                             </ul>
-                          </li>
-                        </ul>
-                      </td>
-                    </tr>
-                  </tbody>
-                </Table>
-              </Fragment>
-            ))}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </Table>
+                  </Fragment>
+                ))}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleStatusModalCancel}>
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 
