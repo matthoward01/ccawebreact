@@ -10,12 +10,13 @@ const UpdateDb = ({
 }) => {
   const [xlsFileName, setXlsFileName] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [program, setProgram] = useState("");
   const handleUpdateDbModalCancel = () => {
     setIsUpdateDbModalVisible(false);
   };
 
   const handleSubmit = () => {
-    setIsProcessing(true)
+    setIsProcessing(true);
     if (type === "Hard Surface") {
       fetch(variables.API_CCA + "UpdateHS", {
         method: "PUT",
@@ -24,6 +25,7 @@ const UpdateDb = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            program,
           xlsFileName,
         }),
       })
@@ -32,14 +34,14 @@ const UpdateDb = ({
           (result) => {
             //alert(result);
             handleUpdateDbModalCancel();
-            setIsProcessing(false)
+            setIsProcessing(false);
           },
           (error) => {
             alert("Failed");
-            setIsProcessing(false)
+            setIsProcessing(false);
           }
         );
-    } else {        
+    } else {
       fetch(variables.API_CCASS + "UpdateSS", {
         method: "PUT",
         headers: {
@@ -47,6 +49,7 @@ const UpdateDb = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            program,
           xlsFileName,
         }),
       })
@@ -55,11 +58,11 @@ const UpdateDb = ({
           (result) => {
             //alert(result);
             handleUpdateDbModalCancel();
-            setIsProcessing(false)
+            setIsProcessing(false);
           },
           (error) => {
             alert("Failed");
-            setIsProcessing(false)
+            setIsProcessing(false);
           }
         );
     }
@@ -70,7 +73,7 @@ const UpdateDb = ({
       size="lg"
       show={isUpdateDbModalVisible}
       onHide={handleUpdateDbModalCancel}
-      backdrop="Static"
+      backdrop="static"
       keyboard={false}
     >
       <Modal.Header closeButton>
@@ -78,11 +81,22 @@ const UpdateDb = ({
       </Modal.Header>
       <Modal.Body>
         {!isProcessing ? (
-          <Form className="d-flex">
+          <Form>
+            <Form.Label>Program Name</Form.Label>
+            <Form.Control
+              id="program"
+              type="text"
+              placeholder="Program Name"
+              className="me-2"
+              aria-label="Program"
+              value={program}
+              onChange={(e) => setProgram(e.target.value)}
+            />
+            <Form.Label>Path to Spreadsheet</Form.Label>
             <Form.Control
               id="fileName"
               type="text"
-              placeholder="Path to Xls File"
+              placeholder="Path to Xlsx File"
               className="me-2"
               aria-label="Filename"
               value={xlsFileName}
@@ -93,7 +107,7 @@ const UpdateDb = ({
           <h1>Upload Processing...Don't Close...</h1>
         )}
       </Modal.Body>
-      {!isProcessing ? (
+      {(!isProcessing && program.length > 0 && xlsFileName.length > 0)? (
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={handleSubmit}>
             Update

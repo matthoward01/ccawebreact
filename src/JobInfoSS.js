@@ -2,10 +2,9 @@ import React, { Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import { variables } from "./Variable";
 import { useEffect, useState } from "react";
-import JobChangeHS from "./JobChangeHS";
 import JobChangeSS from "./JobChangeSS";
 
-const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
+const JobInfoSS = ({ handleJobModalCancel, id }) => {
   const [jobData, setJobData] = useState([]);
   const [isChangeModalVisible, setIsChangeModalVisible] = useState(false);
   const [changeId, setChangeId] = useState("");
@@ -113,23 +112,13 @@ const JobInfoSS = ({ handleJobModalCancel, type, id }) => {
           <Modal.Title>Job Change Info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {type === "Hard Surface" ? (
-            <JobChangeHS
-              setChangeData={setChangeData}
-              handleJobModalCancel={handleJobModalCancel}
-              handleChangeModalCancel={handleChangeModalCancel}
-              Sample_ID={jobData[0].Sample_ID}
-              jobData={jobData}
-            />
-          ) : (
-            <JobChangeSS
-              setChangeData={setChangeData}
-              handleJobModalCancel={handleJobModalCancel}
-              handleChangeModalCancel={handleChangeModalCancel}
-              Sample_ID={jobData[0].Sample_ID}
-              jobData={jobData}
-            />
-          )}
+          <JobChangeSS
+            setChangeData={setChangeData}
+            handleJobModalCancel={handleJobModalCancel}
+            handleChangeModalCancel={handleChangeModalCancel}
+            Sample_ID={jobData[0].Sample_ID}
+            jobData={jobData}
+          />
         </Modal.Body>
         <Modal.Footer></Modal.Footer>
       </Modal>

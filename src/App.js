@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     getData();
-  }, [type]);
+  }, [type, isUpdateDbModalVisible]);
 
   function getData() {
     if (type === "Hard Surface") {

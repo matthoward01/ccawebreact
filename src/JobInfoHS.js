@@ -3,9 +3,8 @@ import { Modal } from "react-bootstrap";
 import { variables } from "./Variable";
 import { useEffect, useState } from "react";
 import JobChangeHS from "./JobChangeHS";
-import JobChangeSS from "./JobChangeSS";
 
-const JobInfoHS = ({ handleJobModalCancel, type, id }) => {
+const JobInfoHS = ({ handleJobModalCancel, id }) => {
   const [jobData, setJobData] = useState([]);
   const [isChangeModalVisible, setIsChangeModalVisible] = useState(false);
   const [changeId, setChangeId] = useState("");
@@ -90,17 +89,14 @@ const JobInfoHS = ({ handleJobModalCancel, type, id }) => {
           <Modal.Title>Job Change Info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {type === "Hard Surface" ? (
-            <JobChangeHS
-              setChangeData={setChangeData}
-              handleJobModalCancel={handleJobModalCancel}
-              handleChangeModalCancel={handleChangeModalCancel}
-              Sample_ID={jobData[0].Sample_ID}
-              jobData={jobData}
-            />
-          ) : (
-            <JobChangeSS type={type} id={changeId} />
-          )}
+          <JobChangeHS
+            setChangeData={setChangeData}
+            handleJobModalCancel={handleJobModalCancel}
+            handleChangeModalCancel={handleChangeModalCancel}
+            Sample_ID={jobData[0].Sample_ID}
+            Program={jobData[0].Program}
+            jobData={jobData}
+          />
         </Modal.Body>
         <Modal.Footer></Modal.Footer>
       </Modal>

@@ -10,6 +10,7 @@ import {
 import { variables } from "./Variable";
 import JobInfoHS from "./JobInfoHS";
 import JobInfoSS from "./JobInfoSS";
+import History from "./History";
 
 const Content = ({
   search,
@@ -26,6 +27,7 @@ const Content = ({
   ); */
   //const [jobData, setJobData] = useState([]);
   const [isJobModalVisible, setIsJobModalVisible] = useState(false);
+  const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
 
   const [jobId, setJobId] = useState("");
   const [sorting, setSorting] = useState("Sample_ID");
@@ -37,7 +39,8 @@ const Content = ({
     var splitResponse = newStatus.split(",");
     var Status_Type = splitResponse[0];
     var Sample_ID = splitResponse[1];
-    var New_Status = splitResponse[2];
+    var Program = splitResponse[2];
+    var New_Status = splitResponse[3];
     /* console.log(
       `Status Type: ${Status_Type}, Sample ID: ${Sample_ID}, New Status: ${New_Status}`
     ); */
@@ -54,6 +57,7 @@ const Content = ({
       body: JSON.stringify({
         Status_Type,
         Sample_ID,
+        Program,
         New_Status,
       }),
     })
@@ -136,6 +140,11 @@ const Content = ({
     //console.log("Passed ID:" + id);
     setJobId(id);
     setIsJobModalVisible(true);
+  };
+
+  const showHistoryModal = () => {
+    //console.log("Passed ID:" + id);
+    setIsHistoryModalVisible(true);
   };
 
   const handleJobModalCancel = () => {
@@ -250,22 +259,52 @@ const Content = ({
                     onSelect={handleStatusChange}
                   >
                     <Dropdown.Item
-                      eventKey={["fl", data.Sample_ID, "Approved"]}
+                      eventKey={[
+                        "fl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Not Done",
+                      ]}
+                    >
+                      Not Done
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      eventKey={[
+                        "fl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Approved",
+                      ]}
                     >
                       Approved
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={["fl", data.Sample_ID, "Waiting for Approval"]}
+                      eventKey={[
+                        "fl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Waiting for Approval",
+                      ]}
                     >
                       Waiting for Approval
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={["fl", data.Sample_ID, "Questions"]}
+                      eventKey={[
+                        "fl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Questions",
+                      ]}
                     >
                       Questions
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={["fl", data.Sample_ID, "Rejected"]}
+                      eventKey={[
+                        "fl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Rejected",
+                      ]}
                     >
                       Rejected
                     </Dropdown.Item>
@@ -278,22 +317,52 @@ const Content = ({
                     onSelect={handleStatusChange}
                   >
                     <Dropdown.Item
-                      eventKey={["bl", data.Sample_ID, "Approved"]}
+                      eventKey={[
+                        "bl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Not Done",
+                      ]}
+                    >
+                      Not Done
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      eventKey={[
+                        "bl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Approved",
+                      ]}
                     >
                       Approved
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={["bl", data.Sample_ID, "Waiting for Approval"]}
+                      eventKey={[
+                        "bl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Waiting for Approval",
+                      ]}
                     >
                       Waiting for Approval
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={["bl", data.Sample_ID, "Questions"]}
+                      eventKey={[
+                        "bl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Questions",
+                      ]}
                     >
                       Questions
                     </Dropdown.Item>
                     <Dropdown.Item
-                      eventKey={["bl", data.Sample_ID, "Rejected"]}
+                      eventKey={[
+                        "bl",
+                        data.Sample_ID,
+                        data.Program,
+                        "Rejected",
+                      ]}
                     >
                       Rejected
                     </Dropdown.Item>
@@ -311,19 +380,25 @@ const Content = ({
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Job Info</Modal.Title>
+          <Modal.Title>Job Info <Button variant='outline-secondary' size='sm' onClick={() => showHistoryModal(jobId)}>History</Button>            
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <History
+          jobId={jobId}
+          type={type}
+          isJobModalVisible={isJobModalVisible}
+          setIsHistoryModalVisible={setIsHistoryModalVisible}
+          isHistoryModalVisible={isHistoryModalVisible}
+          />
           {type === "Hard Surface" ? (
             <JobInfoHS
-              handleJobModalCancel={handleJobModalCancel}
-              type={type}
+              handleJobModalCancel={handleJobModalCancel}              
               id={jobId}
             />
           ) : (
             <JobInfoSS
-              handleJobModalCancel={handleJobModalCancel}
-              type={type}
+              handleJobModalCancel={handleJobModalCancel}              
               id={jobId}
             />
           )}

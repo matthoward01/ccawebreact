@@ -8,6 +8,7 @@ const JobChangeHS = ({
   handleJobModalCancel,
   handleChangeModalCancel,
   Sample_ID,
+  Program,
   jobData,
 }) => {
   const [change, setChange] = useState(jobData[0].Change);
@@ -25,6 +26,7 @@ const JobChangeHS = ({
       body: JSON.stringify({
         Sample_ID,
         change,
+        Program,
       }),
     })
       .then((res) => res.json())

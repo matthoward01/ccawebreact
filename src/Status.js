@@ -10,7 +10,7 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
   useEffect(() => {
     getHsPrograms();
     getSsPrograms();
-  }, []);
+  }, [isStatusModalVisible]);
 
   //TODO: FIX STATUS UPDATING. CURRENTLY NEEDS REFRESH AFTER REFACTORING.
 
@@ -74,6 +74,11 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
                         <tr>
                           <td>
                             <ul>
+                              <StatusSnippet
+                                status="Not Done"
+                                program={ssProgram}
+                                programList={ssProgramList}
+                              />
                               <StatusSnippet
                                 status="Approved"
                                 program={ssProgram}
@@ -141,6 +146,11 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
                         <tr>
                           <td>
                             <ul>
+                              <StatusSnippet
+                                status="Not Done"
+                                program={hsProgram}
+                                programList={hsProgramList}
+                              />
                               <StatusSnippet
                                 status="Approved"
                                 program={hsProgram}
