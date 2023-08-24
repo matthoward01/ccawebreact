@@ -25,7 +25,7 @@ const UpdateDb = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            program,
+          program,
           xlsFileName,
         }),
       })
@@ -49,7 +49,7 @@ const UpdateDb = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            program,
+          program,
           xlsFileName,
         }),
       })
@@ -107,7 +107,7 @@ const UpdateDb = ({
           <h1>Upload Processing...Don't Close...</h1>
         )}
       </Modal.Body>
-      {(!isProcessing && program.length > 0 && xlsFileName.length > 0)? (
+      {!isProcessing && program.length > 0 && xlsFileName.length > 0 ? (
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={handleSubmit}>
             Update

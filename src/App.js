@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     getData();
-  }, [type, isUpdateDbModalVisible]);
+  }, [type]);
 
   function getData() {
     if (type === "Hard Surface") {
@@ -31,7 +31,7 @@ function App() {
           return response.json();
         })
         .then((dbData) => {
-          //console.log("result", data);
+          console.log("TableHS", dbData);
           setData(dbData);
         });
     } else {
@@ -42,7 +42,7 @@ function App() {
           return response.json();
         })
         .then((dbData) => {
-          //console.log("result", data);
+          console.log("TableSS", dbData);
           setData(dbData);
         });
     }

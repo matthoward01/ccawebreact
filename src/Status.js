@@ -10,9 +10,7 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
   useEffect(() => {
     getHsPrograms();
     getSsPrograms();
-  }, [isStatusModalVisible]);
-
-  //TODO: FIX STATUS UPDATING. CURRENTLY NEEDS REFRESH AFTER REFACTORING.
+  }, []);
 
   function getHsPrograms() {
     setHsProgramList([]);
@@ -22,7 +20,7 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
         return response.json();
       })
       .then((dbData) => {
-        //console.log("result", data);
+        console.log("StatusHS", dbData);
         setHsProgramList(dbData);
       });
   }
@@ -35,7 +33,7 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
         return response.json();
       })
       .then((dbData) => {
-        //console.log("result", data);
+        console.log("StatusSS", dbData);
         setSsProgramList(dbData);
       });
   }

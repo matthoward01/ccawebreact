@@ -18,10 +18,9 @@ const JobInfoHS = ({ handleJobModalCancel, id }) => {
         return response.json();
       })
       .then((dbData) => {
-        //console.log("result", data);
+        console.log("JobHS", dbData);
         //setJobData(dbData);
         setJobData(dbData);
-        //console.log(dbData);
       });
   }, [id]);
   const showChangeModal = (id) => {

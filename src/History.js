@@ -14,7 +14,7 @@ const History = ({
 
   useEffect(() => {
     GetHistory();
-  }, [isJobModalVisible]);
+  }, []);
 
   function GetHistory() {
     if (type === "Hard Surface") {
@@ -25,18 +25,18 @@ const History = ({
           return response.json();
         })
         .then((dbData) => {
-          //console.log("result", data);
+          console.log("HistoryHS", dbData);
           setHistory(dbData);
         });
     } else {
       setHistory([]);
-      fetch(variables.API_CCA + "HistorySS/" + jobId)
+      fetch(variables.API_CCASS + "HistorySS/" + jobId)
         .then((response) => {
           //console.log("resp", response);
           return response.json();
         })
         .then((dbData) => {
-          //console.log("result", data);
+          console.log("HistorySS", dbData);
           setHistory(dbData);
         });
     }

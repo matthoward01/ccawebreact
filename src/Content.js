@@ -85,36 +85,42 @@ const Content = ({
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Sample_ID");
+      console.log(sortChoice)
     }
     if (sortChoice === "flplate") {
       sorting === "Face_Label_Plate"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Face_Label_Plate");
+      console.log(sortChoice)
     }
     if (sortChoice === "blplate") {
       sorting === "Back_Label_Plate"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Back_Label_Plate");
+      console.log(sortChoice)
     }
     if (sortChoice === "style") {
       sorting === "Sample_Name"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Sample_Name");
+      console.log(sortChoice)
     }
     if (sortChoice === "flstatus") {
       sorting === "Status_FL"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Status_FL");
+      console.log(sortChoice)
     }
     if (sortChoice === "blstatus") {
       sorting === "Status"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Status");
+      console.log(sortChoice)
     }
   }
 
@@ -154,7 +160,7 @@ const Content = ({
   if (!data.length) {
     return <h1>Loading...</h1>;
   }
-
+//TODO: Need to fix sorting when there are multiple programs in the list.
   return (
     <main>
       <Table bordered hover>
@@ -174,8 +180,8 @@ const Content = ({
           {data
             .sort(
               sortDirection
-                ? (a, b) => a[sorting].localeCompare(b[sorting])
-                : (a, b) => b[sorting].localeCompare(a[sorting])
+                ? (a, b) => (a[sorting] - b[sorting])
+                : (a, b) => (b[sorting] - a[sorting])
             )
             .filter((statusFilter) =>
               statusValue !== "all"
@@ -380,27 +386,29 @@ const Content = ({
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Job Info <Button variant='outline-secondary' size='sm' onClick={() => showHistoryModal(jobId)}>History</Button>            
+          <Modal.Title>
+            Job Info{" "}
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={() => showHistoryModal(jobId)}
+            >
+              History
+            </Button>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <History
-          jobId={jobId}
-          type={type}
-          isJobModalVisible={isJobModalVisible}
-          setIsHistoryModalVisible={setIsHistoryModalVisible}
-          isHistoryModalVisible={isHistoryModalVisible}
+            jobId={jobId}
+            type={type}
+            isJobModalVisible={isJobModalVisible}
+            setIsHistoryModalVisible={setIsHistoryModalVisible}
+            isHistoryModalVisible={isHistoryModalVisible}
           />
           {type === "Hard Surface" ? (
-            <JobInfoHS
-              handleJobModalCancel={handleJobModalCancel}              
-              id={jobId}
-            />
+            <JobInfoHS handleJobModalCancel={handleJobModalCancel} id={jobId} />
           ) : (
-            <JobInfoSS
-              handleJobModalCancel={handleJobModalCancel}              
-              id={jobId}
-            />
+            <JobInfoSS handleJobModalCancel={handleJobModalCancel} id={jobId} />
           )}
         </Modal.Body>
         <Modal.Footer>
