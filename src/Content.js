@@ -160,7 +160,7 @@ const Content = ({
   if (!data.length) {
     return <h1>Loading...</h1>;
   }
-//TODO: Need to fix sorting when there are multiple programs in the list.
+
   return (
     <main>
       <Table bordered hover>
@@ -180,8 +180,8 @@ const Content = ({
           {data
             .sort(
               sortDirection
-                ? (a, b) => (a[sorting] - b[sorting])
-                : (a, b) => (b[sorting] - a[sorting])
+                ? (a, b) => a[sorting].localeCompare(b[sorting])
+                : (a, b) => b[sorting].localeCompare(a[sorting])
             )
             .filter((statusFilter) =>
               statusValue !== "all"
@@ -218,42 +218,42 @@ const Content = ({
               <tr key={data.Sample_ID} id={data.Sample_ID}>
                 <td
                   onClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program)
+                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Sample_ID}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program)
+                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Face_Label_Plate}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program)
+                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Back_Label_Plate}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program)
+                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Sample_Name + " - " + data.Feeler}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program)
+                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Art_Type_FL}
                 </td>
                 <td
                   onClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program)
+                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Art_Type_BL}
