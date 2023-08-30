@@ -90,6 +90,13 @@ const Navigation = ({
                 >
                   Rejection
                 </ToggleButton>
+                <ToggleButton
+                  id="tbg-btn-6"
+                  variant="outline-secondary"
+                  value="Not Done"
+                >
+                  Not Done
+                </ToggleButton>
               </ToggleButtonGroup>
               <DropdownButton
                 as={ButtonGroup}

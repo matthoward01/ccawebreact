@@ -10,13 +10,15 @@ const UpdateDb = ({
 }) => {
   const [xlsFileName, setXlsFileName] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isCanada, setIsCanada] = useState(false);
   const [program, setProgram] = useState("");
   const handleUpdateDbModalCancel = () => {
     setIsUpdateDbModalVisible(false);
   };
 
   const handleSubmit = () => {
-    setIsProcessing(true);
+    setIsProcessing(true);    
+    console.log(isCanada)
     if (type === "Hard Surface") {
       fetch(variables.API_CCA + "UpdateHS", {
         method: "PUT",
@@ -27,6 +29,7 @@ const UpdateDb = ({
         body: JSON.stringify({
           program,
           xlsFileName,
+          isCanada,
         }),
       })
         .then((res) => res.json())
@@ -51,6 +54,7 @@ const UpdateDb = ({
         body: JSON.stringify({
           program,
           xlsFileName,
+          isCanada,
         }),
       })
         .then((res) => res.json())
@@ -68,6 +72,10 @@ const UpdateDb = ({
     }
   };
 
+  const handleCanadaClick = () => {
+    setIsCanada(!isCanada);
+  }
+
   return (
     <Modal
       size="lg"
@@ -77,7 +85,7 @@ const UpdateDb = ({
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Update {type} Database</Modal.Title>
+        <Modal.Title>{isCanada ? "Update Canada " + type + " Database" : "Update " + type + " Database"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {!isProcessing ? (
@@ -102,6 +110,14 @@ const UpdateDb = ({
               value={xlsFileName}
               onChange={(e) => setXlsFileName(e.target.value)}
             />
+            <Form.Check
+        type="switch"
+        id="custom-switch"
+        label="Is Canada"
+        checked={isCanada}
+        /* onChange={(e) => setIsCanada(e.target.value)} */
+        onClick={handleCanadaClick}
+      />
           </Form>
         ) : (
           <h1>Upload Processing...Don't Close...</h1>

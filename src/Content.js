@@ -217,42 +217,42 @@ const Content = ({
             .map((data) => (
               <tr key={data.Sample_ID} id={data.Sample_ID}>
                 <td
-                  onClick={() =>
+                  onDoubleClick={() =>
                     showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Sample_ID}
                 </td>
                 <td
-                  onClick={() =>
+                  onDoubleClick={() =>
                     showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Face_Label_Plate}
                 </td>
                 <td
-                  onClick={() =>
+                  onDoubleClick={() =>
                     showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Back_Label_Plate}
                 </td>
                 <td
-                  onClick={() =>
+                  onDoubleClick={() =>
                     showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Sample_Name + " - " + data.Feeler}
                 </td>
                 <td
-                  onClick={() =>
+                  onDoubleClick={() =>
                     showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Art_Type_FL}
                 </td>
                 <td
-                  onClick={() =>
+                  onDoubleClick={() =>
                     showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
                   }
                 >

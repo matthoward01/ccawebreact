@@ -64,7 +64,7 @@ const History = ({
       <Modal.Body>
         {history.map((h) => (
           <li>
-            {h.DateTime}: {h.Text} - {h.Type}
+            {h.DateTime}: {h.Text} - {h.Submitter}
           </li>
         ))}
       </Modal.Body>
