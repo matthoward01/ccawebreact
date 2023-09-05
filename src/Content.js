@@ -218,42 +218,42 @@ const Content = ({
               <tr key={data.Sample_ID} id={data.Sample_ID}>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
+                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Sample_ID}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
+                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Face_Label_Plate}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
+                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)                    
                   }
                 >
                   {data.Back_Label_Plate}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
+                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Sample_Name + " - " + data.Feeler}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
+                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Art_Type_FL}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Sample_ID + "," + data.Program + "," + data.Merchandised_Product_ID)
+                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
                   }
                 >
                   {data.Art_Type_BL}
