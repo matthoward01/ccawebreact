@@ -18,13 +18,13 @@ const JobInfoHS = ({ handleJobModalCancel, id }) => {
         return response.json();
       })
       .then((dbData) => {
-        console.log("JobHS", dbData);
+        //console.log("JobHS", dbData);
         //setJobData(dbData);
         setJobData(dbData);
       });
   }, [id]);
   const showChangeModal = (id) => {
-    console.log("Passed ID:" + id);
+    //console.log("Passed ID:" + id);
     setChangeId(id);
     setIsChangeModalVisible(true);
   };
@@ -59,11 +59,17 @@ const JobInfoHS = ({ handleJobModalCancel, id }) => {
         <li>Size Name: {" " + jobData[0].Size_Name}</li>
         <li>
           Width:
-          {" " + jobData[0].Width} {jobData[0].Width_Measurement}
+          {/* {" " + jobData[0].Width} {jobData[0].Width_Measurement} */}
+          {jobData[0].Width === "0"
+            ? " " + jobData[0].Width_Measurement
+            : " " + jobData[0].Width + " " + jobData[0].Width_Measurement}
         </li>
         <li>
           Length:
-          {" " + jobData[0].Length} {jobData[0].Length_Measurement}
+          {/* {" " + jobData[0].Length} {jobData[0].Length_Measurement} */}
+          {parseInt(jobData[0].Length) === 0
+            ? " " + jobData[0].Length_Measurement
+            : " " + jobData[0].Length + " " + jobData[0].Length_Measurement}
         </li>
         <li>Roomscene Name: {jobData[0].Roomscene}</li>
       </ul>

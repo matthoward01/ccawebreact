@@ -17,8 +17,8 @@ const UpdateDb = ({
   };
 
   const handleSubmit = () => {
-    setIsProcessing(true);    
-    console.log(isCanada)
+    setIsProcessing(true);
+    //console.log(isCanada)
     if (type === "Hard Surface") {
       fetch(variables.API_CCA + "UpdateHS", {
         method: "PUT",
@@ -74,7 +74,7 @@ const UpdateDb = ({
 
   const handleCanadaClick = () => {
     setIsCanada(!isCanada);
-  }
+  };
 
   return (
     <Modal
@@ -85,7 +85,11 @@ const UpdateDb = ({
       keyboard={false}
     >
       <Modal.Header closeButton>
-        <Modal.Title>{isCanada ? "Update Canada " + type + " Database" : "Update " + type + " Database"}</Modal.Title>
+        <Modal.Title>
+          {isCanada
+            ? "Update Canada " + type + " Database"
+            : "Update " + type + " Database"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {!isProcessing ? (
@@ -111,13 +115,13 @@ const UpdateDb = ({
               onChange={(e) => setXlsFileName(e.target.value)}
             />
             <Form.Check
-        type="switch"
-        id="custom-switch"
-        label="Is Canada"
-        checked={isCanada}
-        /* onChange={(e) => setIsCanada(e.target.value)} */
-        onClick={handleCanadaClick}
-      />
+              type="switch"
+              id="custom-switch"
+              label="Is Canada"
+              checked={isCanada}
+              /* onChange={(e) => setIsCanada(e.target.value)} */
+              onClick={handleCanadaClick}
+            />
           </Form>
         ) : (
           <h1>Upload Processing...Don't Close...</h1>

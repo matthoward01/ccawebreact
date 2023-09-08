@@ -8,32 +8,40 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
   const [ssProgramList, setSsProgramList] = useState([]);
 
   useEffect(() => {
+    const statusInterval = setInterval(() => {
+      getHsPrograms();
+      getSsPrograms();
+    }, 2000);
+    return () => clearInterval(statusInterval);
+  }, []);
+
+  useEffect(() => {
     getHsPrograms();
     getSsPrograms();
   }, []);
 
   function getHsPrograms() {
-    setHsProgramList([]);
+    //setHsProgramList([]);
     fetch(variables.API_CCA + "ProgramsHS")
       .then((response) => {
         //console.log("resp", response);
         return response.json();
       })
       .then((dbData) => {
-        console.log("StatusHS", dbData);
+        //console.log("StatusHS", dbData);
         setHsProgramList(dbData);
       });
   }
 
   function getSsPrograms() {
-    setSsProgramList([]);
+    //setSsProgramList([]);
     fetch(variables.API_CCASS + "ProgramsSS")
       .then((response) => {
         //console.log("resp", response);
         return response.json();
       })
       .then((dbData) => {
-        console.log("StatusSS", dbData);
+        //console.log("StatusSS", dbData);
         setSsProgramList(dbData);
       });
   }

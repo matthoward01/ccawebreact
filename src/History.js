@@ -25,7 +25,7 @@ const History = ({
           return response.json();
         })
         .then((dbData) => {
-          console.log("HistoryHS", dbData);
+          //console.log("HistoryHS", dbData);
           setHistory(dbData);
         });
     } else {

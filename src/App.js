@@ -17,6 +17,13 @@ function App() {
   const [type, setType] = useState(
     JSON.parse(localStorage.getItem("type")) || "Hard Surface"
   );
+ 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getData();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [type]);
 
   useEffect(() => {
     getData();
@@ -24,25 +31,25 @@ function App() {
 
   function getData() {
     if (type === "Hard Surface") {
-      setData([]);
+      //setData([]);
       fetch(variables.API_CCA + "TableHS")
         .then((response) => {
           //console.log("resp", response);
           return response.json();
         })
         .then((dbData) => {
-          console.log("TableHS", dbData);
+          //console.log("TableHS", dbData);
           setData(dbData);
         });
     } else {
-      setData([]);
+      //setData([]);
       fetch(variables.API_CCASS + "TableSS")
         .then((response) => {
           //console.log("resp", response);
           return response.json();
         })
         .then((dbData) => {
-          console.log("TableSS", dbData);
+          //console.log("TableSS", dbData);
           setData(dbData);
         });
     }

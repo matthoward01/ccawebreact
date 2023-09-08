@@ -85,42 +85,42 @@ const Content = ({
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Sample_ID");
-      console.log(sortChoice)
+      //console.log(sortChoice)
     }
     if (sortChoice === "flplate") {
       sorting === "Face_Label_Plate"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Face_Label_Plate");
-      console.log(sortChoice)
+      //console.log(sortChoice)
     }
     if (sortChoice === "blplate") {
       sorting === "Back_Label_Plate"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Back_Label_Plate");
-      console.log(sortChoice)
+      //console.log(sortChoice)
     }
     if (sortChoice === "style") {
       sorting === "Sample_Name"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Sample_Name");
-      console.log(sortChoice)
+      //console.log(sortChoice)
     }
     if (sortChoice === "flstatus") {
       sorting === "Status_FL"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Status_FL");
-      console.log(sortChoice)
+      //console.log(sortChoice)
     }
     if (sortChoice === "blstatus") {
       sorting === "Status"
         ? setSortDirection(!sortDirection)
         : setSortDirection(true);
       setSorting("Status");
-      console.log(sortChoice)
+      //console.log(sortChoice)
     }
   }
 
@@ -218,42 +218,90 @@ const Content = ({
               <tr key={data.Sample_ID} id={data.Sample_ID}>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
+                    showJobModal(
+                      data.Program +
+                        "/" +
+                        data.Sample_ID +
+                        "/" +
+                        data.Merchandised_Product_ID +
+                        "/" +
+                        data.Manufacturer_Product_Color_ID
+                    )
                   }
                 >
                   {data.Sample_ID}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
+                    showJobModal(
+                      data.Program +
+                        "/" +
+                        data.Sample_ID +
+                        "/" +
+                        data.Merchandised_Product_ID +
+                        "/" +
+                        data.Manufacturer_Product_Color_ID
+                    )
                   }
                 >
                   {data.Face_Label_Plate}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)                    
+                    showJobModal(
+                      data.Program +
+                        "/" +
+                        data.Sample_ID +
+                        "/" +
+                        data.Merchandised_Product_ID +
+                        "/" +
+                        data.Manufacturer_Product_Color_ID
+                    )
                   }
                 >
                   {data.Back_Label_Plate}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
+                    showJobModal(
+                      data.Program +
+                        "/" +
+                        data.Sample_ID +
+                        "/" +
+                        data.Merchandised_Product_ID +
+                        "/" +
+                        data.Manufacturer_Product_Color_ID
+                    )
                   }
                 >
                   {data.Sample_Name + " - " + data.Feeler}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
+                    showJobModal(
+                      data.Program +
+                        "/" +
+                        data.Sample_ID +
+                        "/" +
+                        data.Merchandised_Product_ID +
+                        "/" +
+                        data.Manufacturer_Product_Color_ID
+                    )
                   }
                 >
                   {data.Art_Type_FL}
                 </td>
                 <td
                   onDoubleClick={() =>
-                    showJobModal(data.Program + "/" + data.Sample_ID + "/" + data.Merchandised_Product_ID)
+                    showJobModal(
+                      data.Program +
+                        "/" +
+                        data.Sample_ID +
+                        "/" +
+                        data.Merchandised_Product_ID +
+                        "/" +
+                        data.Manufacturer_Product_Color_ID
+                    )
                   }
                 >
                   {data.Art_Type_BL}
