@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Dropdown,
   Table,
@@ -28,10 +28,15 @@ const Content = ({
   //const [jobData, setJobData] = useState([]);
   const [isJobModalVisible, setIsJobModalVisible] = useState(false);
   const [isHistoryModalVisible, setIsHistoryModalVisible] = useState(false);
-
   const [jobId, setJobId] = useState("");
   const [sorting, setSorting] = useState("Sample_ID");
   const [sortDirection, setSortDirection] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 30;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusValue]);  
 
   const handleStatusChange = (newStatus) => {
     //console.log(newStatus);
@@ -132,6 +137,9 @@ const Content = ({
     }
     if (currentStatus === "Waiting for Approval") {
       color = "warning";
+    }    
+    if (currentStatus === "Awaiting Corrections") {
+      color = "danger";
     }
     if (currentStatus === "Rejected") {
       color = "danger";
@@ -157,12 +165,89 @@ const Content = ({
     setIsJobModalVisible(false);
   };
 
-  if (!data.length) {
+  const sortedAndFilteredData = useMemo(() => {
+    return data
+      .sort(
+        sortDirection
+          ? (a, b) => a[sorting].localeCompare(b[sorting])
+          : (a, b) => b[sorting].localeCompare(a[sorting])
+      )
+      .filter((statusFilter) =>
+        statusValue !== "all"
+          ? statusFilter.Status.toString().toLowerCase() ===
+            statusValue.toLowerCase()
+          : statusFilter
+      )
+      .filter((programFilter) =>
+        programValue !== "all"
+          ? programFilter.Program.toString().toLowerCase() ===
+            programValue.toLowerCase()
+          : programFilter
+      )
+      .filter((filteredData) =>
+        (
+          filteredData.Sample_ID.toString().toLowerCase() +
+          " " +
+          filteredData.Face_Label_Plate.toString().toLowerCase() +
+          " " +
+          filteredData.Back_Label_Plate.toString().toLowerCase() +
+          " " +
+          filteredData.Sample_Name.toString().toLowerCase() +
+          " " +
+          filteredData.Art_Type_FL.toString().toLowerCase() +
+          " " +
+          filteredData.Art_Type_BL.toString().toLowerCase() +
+          " " +
+          filteredData.Status_FL.toString().toLowerCase() +
+          " " +
+          filteredData.Status.toString().toLowerCase()
+        ).includes(search.toLowerCase())
+      );
+  }, [data, search, statusValue, sorting]);
+  
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = sortedAndFilteredData.slice(indexOfFirstRow, indexOfLastRow);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const renderDropdown = () => {
+    const totalPages = Math.ceil(sortedAndFilteredData.length / rowsPerPage);
+    const options = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+    return (
+      <Dropdown>
+        <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic">
+          Page {currentPage}
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          {options.map((option) => (
+            <Dropdown.Item
+            key={option}
+            onClick={() => paginate(option)}
+            active={option === currentPage}
+            style={{ backgroundColor: option === currentPage ? '#6c757d' : '' }}
+          >
+            {`Page ${option}`}
+          </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  };
+
+  if (!currentRows.length) {
     return <h1>Loading...</h1>;
   }
 
   return (
     <main>
+      <div className="pagination">
+        <Button variant='outline-secondary' onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>Previous</Button>
+        {renderDropdown()}
+        <Button variant='outline-secondary' onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(sortedAndFilteredData.length / rowsPerPage)}>Next</Button>
+      </div>
       <Table bordered hover>
         <thead>
           <tr>
@@ -177,44 +262,7 @@ const Content = ({
           </tr>
         </thead>
         <tbody>
-          {data
-            .sort(
-              sortDirection
-                ? (a, b) => a[sorting].localeCompare(b[sorting])
-                : (a, b) => b[sorting].localeCompare(a[sorting])
-            )
-            .filter((statusFilter) =>
-              statusValue !== "all"
-                ? statusFilter.Status.toString().toLowerCase() ===
-                  statusValue.toLowerCase()
-                : statusFilter
-            )
-            .filter((programFilter) =>
-              programValue !== "all"
-                ? programFilter.Program.toString().toLowerCase() ===
-                  programValue.toLowerCase()
-                : programFilter
-            )
-            .filter((filteredData) =>
-              (
-                filteredData.Sample_ID.toString().toLowerCase() +
-                " " +
-                filteredData.Face_Label_Plate.toString().toLowerCase() +
-                " " +
-                filteredData.Back_Label_Plate.toString().toLowerCase() +
-                " " +
-                filteredData.Sample_Name.toString().toLowerCase() +
-                " " +
-                filteredData.Art_Type_FL.toString().toLowerCase() +
-                " " +
-                filteredData.Art_Type_BL.toString().toLowerCase() +
-                " " +
-                filteredData.Status_FL.toString().toLowerCase() +
-                " " +
-                filteredData.Status.toString().toLowerCase()
-              ).includes(search.toLowerCase())
-            )
-            .map((data) => (
+          {currentRows.map((data) => (
               <tr key={data.Sample_ID} id={data.Sample_ID}>
                 <td
                   onDoubleClick={() =>
@@ -357,6 +405,16 @@ const Content = ({
                         "fl",
                         data.Sample_ID,
                         data.Program,
+                        "Awaiting Corrections",
+                      ]}
+                    >
+                      Awaiting Corrections
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      eventKey={[
+                        "fl",
+                        data.Sample_ID,
+                        data.Program,
                         "Rejected",
                       ]}
                     >
@@ -415,6 +473,16 @@ const Content = ({
                         "bl",
                         data.Sample_ID,
                         data.Program,
+                        "Awaiting Corrections",
+                      ]}
+                    >
+                      Awaiiting Corrections
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      eventKey={[
+                        "bl",
+                        data.Sample_ID,
+                        data.Program,
                         "Rejected",
                       ]}
                     >
@@ -426,6 +494,11 @@ const Content = ({
             ))}
         </tbody>
       </Table>
+      <div className="pagination">
+        <Button variant='outline-secondary' onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>Previous</Button>
+        {renderDropdown()}
+        <Button variant='outline-secondary' onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(sortedAndFilteredData.length / rowsPerPage)}>Next</Button>
+      </div>
       <Modal
         size="lg"
         show={isJobModalVisible}

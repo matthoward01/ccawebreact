@@ -86,12 +86,19 @@ const Navigation = ({
                 <ToggleButton
                   id="tbg-btn-5"
                   variant="outline-secondary"
+                  value="Awaiting Corrections"
+                >
+                  Awaiting Corrections
+                </ToggleButton>
+                <ToggleButton
+                  id="tbg-btn-6"
+                  variant="outline-secondary"
                   value="Rejected"
                 >
                   Rejection
                 </ToggleButton>
                 <ToggleButton
-                  id="tbg-btn-6"
+                  id="tbg-btn-7"
                   variant="outline-secondary"
                   value="Not Done"
                 >
