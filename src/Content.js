@@ -174,9 +174,11 @@ const Content = ({
       )
       .filter((statusFilter) =>
         statusValue !== "all"
-          ? statusFilter.Status.toString().toLowerCase() ===
-            statusValue.toLowerCase()
-          : statusFilter
+        ? (statusFilter.Status_FL.toString().toLowerCase() ===
+            statusValue.toLowerCase() ||
+            statusFilter.Status.toString().toLowerCase() ===
+            statusValue.toLowerCase())
+        : statusFilter
       )
       .filter((programFilter) =>
         programValue !== "all"
