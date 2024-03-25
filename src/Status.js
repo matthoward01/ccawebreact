@@ -99,6 +99,11 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
                                 status="Questions"
                                 program={ssProgram}
                                 programList={ssProgramList}
+                              />                              
+                              <StatusSnippet
+                                status="Awaiting Corrections"
+                                program={ssProgram}
+                                programList={ssProgramList}
                               />
                               <StatusSnippet
                                 status="Rejected"
@@ -169,6 +174,11 @@ const Status = ({ isStatusModalVisible, handleStatusModalCancel }) => {
                               />
                               <StatusSnippet
                                 status="Questions"
+                                program={hsProgram}
+                                programList={hsProgramList}
+                              />
+                              <StatusSnippet
+                                status="Awaiting Corrections"
                                 program={hsProgram}
                                 programList={hsProgramList}
                               />
